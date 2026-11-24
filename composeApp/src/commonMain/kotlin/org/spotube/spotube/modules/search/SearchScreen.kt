@@ -595,20 +595,15 @@ private fun SearchTabs(
         state = listState,
         modifier = Modifier.fillMaxWidth().dragScrollable(listState),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(types) { type ->
             val isSelected = selectedType == type
-            MillenniumButton(
-                onClick = { onTabSelected(type) },
-                style = if (isSelected) {
-                    MillenniumButtonStyle.Primary
-                } else {
-                    MillenniumButtonStyle.Secondary
-                }
-            ) {
-                Text(type.tabTitle())
-            }
+            org.spotube.spotube.core.ui.spotify.SpChip(
+                text = type.tabTitle(),
+                selected = isSelected,
+                onClick = { onTabSelected(type) }
+            )
         }
     }
 }

@@ -36,13 +36,15 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: android-actions/setup-android@v4
-      - uses: dtolnay/rust-toolchain@stable
+      # Rust 1.100 changed cargo's build-script output layout, which this Gobley version can't read yet.
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.99.1
       - uses: gradle/actions/setup-gradle@v6
       - name: Publish compose-webview
         working-directory: compose-webview
         run: |
-          set -o pipefail
-          chmod +x gradlew && ./gradlew publishToMavenLocal 2>&1 | tee ../build.log | tail -5
+          chmod +x gradlew && ./gradlew publishToMavenLocal > ../webview.log 2>&1 || { tail -60 ../webview.log; cp ../webview.log ../build.log; exit 1; }
       - run: chmod +x gradlew
       - uses: actions/cache@v6
         with:
@@ -56,12 +58,14 @@ jobs:
           ORG_GRADLE_PROJECT_nightly: false
           ORG_GRADLE_PROJECT_buildNumber: ${{ github.run_number }}
         run: |
-          set -o pipefail
+          unset ANDROID_HOME ANDROID_SDK_ROOT
+          code=0
           xcodebuild -workspace iosApp/iosApp.xcworkspace -scheme iosApp -configuration Release \
             -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build/ios \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" DEVELOPMENT_TEAM="" \
-            build 2>&1 | tee build.log | grep -E "^e: |error:|BUILD (SUCCEEDED|FAILED)" || true
-          test ${PIPESTATUS[0]} -eq 0
+            build > build.log 2>&1 || code=$?
+          grep -E "^e: |error:|BUILD (SUCCEEDED|FAILED)" build.log | head -100 || true
+          [ $code -eq 0 ] || exit $code
           APP=$(find build/ios/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" -type d | head -1)
           mkdir Payload && cp -R "$APP" Payload/ && zip -qry Spotube-ios.ipa Payload
           ls -la Spotube-ios.ipa
@@ -71,12 +75,14 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_nightly: false
         run: |
-          set -o pipefail
+          unset ANDROID_HOME ANDROID_SDK_ROOT
+          code=0
           xcodebuild -workspace iosApp/iosApp.xcworkspace -scheme iosApp -configuration Debug \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/sim \
             ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGNING_ALLOWED=NO \
-            build 2>&1 | tee build.log | grep -E "^e: |error:|BUILD (SUCCEEDED|FAILED)" || true
-          test ${PIPESTATUS[0]} -eq 0
+            build > build.log 2>&1 || code=$?
+          grep -E "^e: |error:|BUILD (SUCCEEDED|FAILED)" build.log | head -100 || true
+          [ $code -eq 0 ] || exit $code
 
       - name: Screenshots
         if: matrix.kind == 'simulator'

@@ -499,11 +499,12 @@ private fun greeting(): String {
     )
 }
 
+private data class Tile(val title: String, val image: String?, val round: Boolean, val route: Routes)
+
 /** Spotify's 2-column grid of shortcut tiles at the top of Home. */
 @Composable
 private fun QuickAccessGrid(items: List<MetadataBrowseItem>) {
     val navigationCommands = koinInject<NavigationCommands>()
-    data class Tile(val title: String, val image: String?, val round: Boolean, val route: Routes)
     val tiles = remember(items) {
         items.mapNotNull { item ->
             when (item) {

@@ -146,7 +146,8 @@ internal fun FloatingPlayerContent(
             .fillMaxWidth()
             .height(FloatingPlayerContentHeight + FloatingPlayerBottomBleed)
     ) {
-        Box(
+        // Like Spotify, the mini player only shows up once something is queued.
+        if (hasQueue) Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(FloatingPlayerContentHeight)
