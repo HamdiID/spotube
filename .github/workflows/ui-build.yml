@@ -1,0 +1,136 @@
+name: UI build
+
+on:
+  push:
+    branches: [spotify-ui]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ui-build
+  cancel-in-progress: true
+
+env:
+  COMPOSE_WEBVIEW_REPO: KRTirtho/ComposeNativeWebview
+  COMPOSE_WEBVIEW_COMMIT: b11ac748de1219f9432338c067a2c5dafef3072a
+
+jobs:
+  deps:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.COMPOSE_WEBVIEW_REPO }}
+          ref: ${{ env.COMPOSE_WEBVIEW_COMMIT }}
+          path: compose-webview
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: android-actions/setup-android@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Publish compose-webview
+        working-directory: compose-webview
+        run: chmod +x gradlew && ./gradlew publishToMavenLocal
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maven-local
+          path: ~/.m2/repository/
+          retention-days: 1
+
+  ios:
+    needs: deps
+    runs-on: macos-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [device, simulator]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: maven-local
+          path: ~/.m2/repository/
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x gradlew
+      - uses: actions/cache@v4
+        with:
+          path: iosApp/Pods
+          key: pods-${{ runner.os }}-${{ hashFiles('iosApp/Podfile.lock') }}
+      - run: pod install --project-directory=iosApp
+
+      - name: Build device app
+        if: matrix.kind == 'device'
+        env:
+          ORG_GRADLE_PROJECT_nightly: false
+          ORG_GRADLE_PROJECT_buildNumber: ${{ github.run_number }}
+        run: |
+          set -o pipefail
+          xcodebuild -workspace iosApp/iosApp.xcworkspace -scheme iosApp -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build/ios \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" DEVELOPMENT_TEAM="" \
+            build 2>&1 | tee build.log | grep -E "^e: |error:|BUILD (SUCCEEDED|FAILED)" || true
+          test ${PIPESTATUS[0]} -eq 0
+          APP=$(find build/ios/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" -type d | head -1)
+          mkdir Payload && cp -R "$APP" Payload/ && zip -qry Spotube-ios.ipa Payload
+          ls -la Spotube-ios.ipa
+
+      - name: Build simulator app
+        if: matrix.kind == 'simulator'
+        env:
+          ORG_GRADLE_PROJECT_nightly: false
+        run: |
+          set -o pipefail
+          xcodebuild -workspace iosApp/iosApp.xcworkspace -scheme iosApp -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/sim \
+            ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee build.log | grep -E "^e: |error:|BUILD (SUCCEEDED|FAILED)" || true
+          test ${PIPESTATUS[0]} -eq 0
+
+      - name: Screenshots
+        if: matrix.kind == 'simulator'
+        run: |
+          mkdir -p shots
+          APP=$(find build/sim/Build/Products/Debug-iphonesimulator -maxdepth 1 -name "*.app" -type d | head -1)
+          BID=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$APP/Info.plist")
+          DEV=$(xcrun simctl list devices available -j | python3 -c "import json,sys;d=json.load(sys.stdin)['devices'];print(next(x['udid'] for k in sorted(d,reverse=True) if 'iOS' in k for x in d[k] if 'iPhone' in x['name'] and 'Pro' in x['name'] and 'Max' not in x['name']))")
+          xcrun simctl boot "$DEV"; xcrun simctl bootstatus "$DEV" -b
+          xcrun simctl ui "$DEV" appearance dark || true
+          xcrun simctl install "$DEV" "$APP"
+          xcrun simctl launch "$DEV" "$BID"
+          for i in 1 2 3; do sleep 12; xcrun simctl io "$DEV" screenshot "shots/launch_$i.png"; done
+          if [ -f .github/ui-shots.sh ]; then bash .github/ui-shots.sh "$DEV" "$BID" || true; fi
+          xcrun simctl spawn "$DEV" log show --last 3m --predicate "process == \"$(basename "$APP" .app)\"" --style compact 2>/dev/null | tail -300 > shots/app.log || true
+
+      - name: Publish output
+        if: always()
+        run: |
+          OUT=$RUNNER_TEMP/out; mkdir -p $OUT/${{ matrix.kind }}
+          [ -f build.log ] && grep -E "^e: |^w: .*deprecated|error:|BUILD (SUCCEEDED|FAILED)" build.log | grep -v "^w:" | head -200 > $OUT/${{ matrix.kind }}/errors.txt || true
+          [ -f build.log ] && tail -120 build.log > $OUT/${{ matrix.kind }}/tail.txt || true
+          [ -d shots ] && cp -R shots $OUT/${{ matrix.kind }}/ || true
+          if [ -f Spotube-ios.ipa ]; then split -b 45m Spotube-ios.ipa $OUT/${{ matrix.kind }}/Spotube-ios.ipa.part-; fi
+          echo "${{ job.status }} ${{ github.sha }}" > $OUT/${{ matrix.kind }}/status.txt
+          cd $OUT
+          git init -q -b ci-${{ matrix.kind }}
+          git config user.name ci && git config user.email ci@localhost
+          git add -A && git commit -qm "run ${{ github.run_number }} ${{ matrix.kind }}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ci-${{ matrix.kind }}
+
+      - name: Release IPA
+        if: matrix.kind == 'device' && success()
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: spotify-ui
+          name: Spotube UI
+          prerelease: true
+          files: Spotube-ios.ipa
