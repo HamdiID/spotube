@@ -18,6 +18,19 @@
 package org.spotube.spotube.core.ui.component
 
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import org.spotube.spotube.core.ui.spotify.Sp
+import org.spotube.spotube.core.ui.spotify.SpIcon
+import org.spotube.spotube.core.ui.spotify.SpIconButton
+import org.spotube.spotube.core.ui.spotify.SpIcons
+import org.spotube.spotube.core.ui.spotify.SpPlayButton
+import org.spotube.spotube.core.ui.spotify.bouncyClick
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.height
 import org.spotube.millennium.composables.MillenniumButton
@@ -281,32 +294,153 @@ fun CollectionDetails(
             }
         }
 
-        MillenniumCard(
+        if (isCompact) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .size(236.dp)
+                        .shadow(24.dp, RoundedCornerShape(4.dp), ambientColor = Color.Black, spotColor = Color.Black)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(Sp.Highlight)
+                        .sharedElementOrNone(
+                            key = sharedElementKey,
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope)
+                        .shimmerApply(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (imageURL.isNotBlank()) {
+                        AsyncImage(
+                            model = imageURL,
+                            contentDescription = title,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop)
+                    } else if (imageResource != null) {
+                        androidx.compose.foundation.Image(
+                            painter = painterResource(imageResource),
+                            contentDescription = title,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop)
+                    } else {
+                        SpIcon(SpIcons.Music, null, tint = Sp.SubText, size = 72.dp)
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    TextWithShimmer(
+                        text = title,
+                        style = TextStyle(fontSize = 24.sp, lineHeight = 30.sp, fontWeight = FontWeight.Bold),
+                        color = Sp.Text,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis)
+                    if (description.isNotBlank()) {
+                        TextWithShimmer(
+                            text = description,
+                            style = TextStyle(fontSize = 13.sp, lineHeight = 18.sp),
+                            color = Sp.SubText,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis)
+                    }
+                    Row(
+                        modifier = Modifier.bouncyClick(pressedScale = 0.97f, onClick = onOwnerClick),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        if (ownerImageURL != null) {
+                            AsyncImage(
+                                model = ownerImageURL,
+                                contentDescription = ownerName,
+                                modifier = Modifier
+                                    .size(22.dp)
+                                    .clip(CircleShape)
+                                    .background(Sp.Highlight),
+                                contentScale = ContentScale.Crop)
+                        }
+                        TextWithShimmer(
+                            text = ownerName,
+                            style = TextStyle(fontSize = 13.sp, lineHeight = 16.sp, fontWeight = FontWeight.Bold),
+                            color = Sp.Text,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis)
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (showFollowButton) {
+                            SpIconButton(
+                                imageVector = if (isFollowing) SpIcons.CheckCircle else SpIcons.AddCircle,
+                                contentDescription = stringResource(if (isFollowing) Res.string.collection_details_unfollow else Res.string.collection_details_follow),
+                                onClick = onFollowClick,
+                                enabled = !isFollowLoading,
+                                tint = if (isFollowing) Sp.Green else Sp.SubText,
+                                iconSize = 26.dp
+                            )
+                        }
+                        SpIconButton(
+                            imageVector = SpIcons.Queue,
+                            contentDescription = stringResource(Res.string.player_add_to_queue_content_description),
+                            onClick = onAddToQueue,
+                            enabled = !isAddToQueueLoading,
+                            tint = Sp.SubText,
+                            iconSize = 24.dp
+                        )
+                        if (onEdit != null) {
+                            SpIconButton(
+                                imageVector = SpIcons.More,
+                                contentDescription = stringResource(Res.string.collection_details_edit_playlist),
+                                onClick = onEdit,
+                                tint = Sp.SubText,
+                                iconSize = 24.dp
+                            )
+                        }
+                        Spacer(Modifier.weight(1f))
+                        if (isJamGuest) {
+                            if (onAddToJam != null) {
+                                MillenniumButton(onClick = onAddToJam) {
+                                    MillenniumIcon(
+                                        imageVector = Iconsax.IconsaxAddSquare,
+                                        contentDescription = stringResource(Res.string.track_options_add_to_jam))
+                                    TextWithShimmer(text = stringResource(Res.string.track_options_add_to_jam))
+                                }
+                            }
+                        } else {
+                            SpIconButton(
+                                imageVector = SpIcons.Shuffle,
+                                contentDescription = stringResource(Res.string.collection_details_shuffle_play),
+                                onClick = onShufflePlay,
+                                enabled = !isShuffleLoading,
+                                tint = Sp.SubText,
+                                iconSize = 26.dp
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            SpPlayButton(
+                                isPlaying = isPlaying,
+                                onClick = onPlay,
+                                size = 52.dp,
+                                enabled = !isPlayLoading,
+                                contentDescription = stringResource(if (isPlaying) Res.string.player_pause_content_description else Res.string.player_play_content_description)
+                            )
+                        }
+                    }
+                }
+            }
+        } else MillenniumCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             contentPadding = PaddingValues(0.dp)) {
-            if (isCompact) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(14.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically) {
-                        artwork()
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            metadata()
-                            ownerInfo()
-                            actions()
-                        }
-                    }
-                    playPauseButton()
-                }
+            if (false) {
             } else {
                 Row(
                     modifier = Modifier

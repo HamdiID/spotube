@@ -154,12 +154,7 @@ private fun WelcomeStepSwitcher(
         when (index) {
             0 -> BrandingPage(contentPadding = pagePadding)
 
-            1 -> DonationPage(
-                donations = state.donations,
-                onDonate = viewModel::openDonation,
-                contentPadding = pagePadding)
-
-            2 -> PluginsPage()
+            1 -> PluginsPage()
 
             else -> HowItWorksPage(contentPadding = pagePadding)
         }

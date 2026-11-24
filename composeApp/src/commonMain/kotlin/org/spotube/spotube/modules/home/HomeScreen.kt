@@ -25,6 +25,28 @@ import org.spotube.millennium.composables.MillenniumButton
 import org.spotube.millennium.composables.MillenniumButtonStyle
 import org.spotube.millennium.theme.MillenniumTheme
 import androidx.compose.foundation.background
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
+import coil3.compose.AsyncImage
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.spotube.spotube.core.ui.spotify.Sp
+import org.spotube.spotube.core.ui.spotify.SpIconButton
+import org.spotube.spotube.core.ui.spotify.SpIcons
+import org.spotube.spotube.core.ui.spotify.bouncyClick
+import spotube.composeapp.generated.resources.home_greeting_afternoon
+import spotube.composeapp.generated.resources.home_greeting_evening
+import spotube.composeapp.generated.resources.home_greeting_morning
+import spotube.composeapp.generated.resources.settings_screen_title
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -79,14 +101,12 @@ import org.spotube.spotube.modules.shell.ConnectStatusBanner
 import org.spotube.spotube.resources.iconsax.IconsaxSoundTwotone
 import org.spotube.spotube.getPlatform
 import org.spotube.spotube.modules.shell.LocalAppShellBottomInset
-import org.spotube.spotube.modules.support.LocalSupportPrompt
 import org.spotube.spotube.resources.iconsax.Iconsax
 import org.spotube.spotube.resources.iconsax.IconsaxHeart2
 import org.spotube.spotube.resources.iconsax.IconsaxMirroringScreen
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import spotube.composeapp.generated.resources.Res
-import spotube.composeapp.generated.resources.support_button_label
 import spotube.composeapp.generated.resources.devices_title
 import spotube.composeapp.generated.resources.home_title_browse
 import spotube.composeapp.generated.resources.jam_screen_title
@@ -100,7 +120,6 @@ import spotube.composeapp.generated.resources.cookie_regular
 @Composable
 fun HomeScreen(viewModel: HomeScreenViewModel) {
     val navigationCommands = koinInject<NavigationCommands>()
-    val openSupport = LocalSupportPrompt.current
     val isSmallScreen = currentWindowWidthBreakpoint() isBelow WindowBreakpoints.Medium
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
@@ -143,13 +162,9 @@ fun HomeScreen(viewModel: HomeScreenViewModel) {
             title = {
                 if (isSmallScreen) {
                     Text(
-                        "Spotube",
-                        style = AppTheme.typography.headlineLarge.copy(
-                            fontFamily = FontFamily(
-                                listOf(Font(Res.font.cookie_regular, weight = FontWeight.Normal))
-                            )
-                        ),
-                        color = AppTheme.colors.onSurface
+                        text = greeting(),
+                        style = TextStyle(fontSize = 24.sp, lineHeight = 30.sp, fontWeight = FontWeight.Bold),
+                        color = Sp.Text
                     )
                 } else {
                     Text(stringResource(Res.string.home_title_browse))
@@ -158,34 +173,24 @@ fun HomeScreen(viewModel: HomeScreenViewModel) {
             },
             actions = {
                 if (isSmallScreen) {
-                    MillenniumIconButton(
+                    SpIconButton(
+                        imageVector = SpIcons.Devices,
+                        contentDescription = stringResource(Res.string.devices_title),
                         onClick = { navigationCommands.navigateTo(Routes.Devices) },
-                        style = MillenniumIconButtonStyle.Quiet
-                    ) {
-                        MillenniumIcon(
-                            imageVector = Iconsax.IconsaxMirrorScreenRegular,
-                            contentDescription = stringResource(Res.string.devices_title)
-                        )
-                    }
-                    MillenniumIconButton(
+                        iconSize = 22.dp
+                    )
+                    SpIconButton(
+                        imageVector = SpIcons.Speaker,
+                        contentDescription = stringResource(Res.string.jam_screen_title),
                         onClick = { navigationCommands.navigateTo(Routes.Jam) },
-                        style = MillenniumIconButtonStyle.Quiet
-                    ) {
-                        MillenniumIcon(
-                            imageVector = Iconsax.IconsaxSoundTwotone,
-                            contentDescription = stringResource(Res.string.jam_screen_title)
-                        )
-                    }
-                    val supportLabel = stringResource(Res.string.support_button_label)
-                    MillenniumIconButton(
-                        onClick = openSupport,
-                        style = MillenniumIconButtonStyle.Quiet
-                    ) {
-                        MillenniumIcon(
-                            imageVector = Iconsax.IconsaxHeart2,
-                            contentDescription = supportLabel
-                        )
-                    }
+                        iconSize = 22.dp
+                    )
+                    SpIconButton(
+                        imageVector = SpIcons.Settings,
+                        contentDescription = stringResource(Res.string.settings_screen_title),
+                        onClick = { navigationCommands.navigateTo(Routes.Settings) },
+                        iconSize = 22.dp
+                    )
                 }
             })
         if (isSmallScreen) {
@@ -202,6 +207,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel) {
             if (!isSmallScreen) {
                 HomeContent(
                     listState = listState,
+                    compact = false,
                     state = state,
                     onRetry = { viewModel.refresh() },
                     onGenreSelected = { viewModel.selectGenre(it) })
@@ -215,6 +221,7 @@ fun HomeScreen(viewModel: HomeScreenViewModel) {
                 ) {
                     HomeContent(
                         listState = listState,
+                        compact = true,
                         state = state,
                         onRetry = { viewModel.refresh() },
                         onGenreSelected = { viewModel.selectGenre(it) })
@@ -233,13 +240,14 @@ fun HomeScreen(viewModel: HomeScreenViewModel) {
 @Composable
 private fun HomeContent(
     listState: androidx.compose.foundation.lazy.LazyListState,
+    compact: Boolean,
     state: HomeScreenState,
     onRetry: () -> Unit,
     onGenreSelected: (String) -> Unit
 ) {
     val shellBottomInset = LocalAppShellBottomInset.current
     val contentPadding = remember(shellBottomInset) {
-        PaddingValues(top = 16.dp, bottom = 16.dp + shellBottomInset)
+        PaddingValues(top = 4.dp, bottom = 24.dp + shellBottomInset)
     }
 
     LazyColumn(
@@ -296,12 +304,6 @@ private fun HomeContent(
             }
 
             is HomeScreenState.Data -> {
-                if (state.featuredItems.isNotEmpty()) {
-                    item {
-                        FeaturedCarousel(items = state.featuredItems)
-                    }
-                }
-
                 if (state.genres.isNotEmpty()) {
                     item {
                         GenreTabs(
@@ -309,6 +311,16 @@ private fun HomeContent(
                             selectedGenreId = state.selectedGenreId,
                             onGenreSelected = onGenreSelected
                         )
+                    }
+                }
+
+                if (state.featuredItems.isNotEmpty()) {
+                    item {
+                        if (compact) {
+                            QuickAccessGrid(items = state.featuredItems)
+                        } else {
+                            FeaturedCarousel(items = state.featuredItems)
+                        }
                     }
                 }
 
@@ -400,20 +412,20 @@ private fun HomeSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (!subtitle.isNullOrEmpty()) Text(
-            text = subtitle,
-            style = AppTheme.typography.labelMedium.copy(
-                color = AppTheme.colors.secondary,
-                fontWeight = FontWeight.Medium
-            ),
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-        Text(
-            text = title,
-            style = AppTheme.typography.titleLarge,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = 16.dp).offset(y = (-12).dp)
-        )
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            if (!subtitle.isNullOrEmpty()) Text(
+                text = subtitle,
+                style = TextStyle(fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.Medium),
+                color = Sp.SubText,
+                maxLines = 1
+            )
+            Text(
+                text = title,
+                style = TextStyle(fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.Bold),
+                color = Sp.Text,
+                maxLines = 2
+            )
+        }
 
         LazyRow(
             state = rowState,
@@ -447,18 +459,98 @@ private fun GenreTabs(
         state = rowState,
         modifier = Modifier.dragScrollable(rowState),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(genres) { genre ->
-            MillenniumButton(
-                onClick = { onGenreSelected(genre.id) },
-                style = if (selectedGenreId == genre.id) {
-                    MillenniumButtonStyle.Primary
-                } else {
-                    MillenniumButtonStyle.Secondary
-                }
+            val selected = selectedGenreId == genre.id
+            val bg by animateColorAsState(if (selected) Sp.Green else Sp.Highlight, tween(200), label = "chip")
+            val fg by animateColorAsState(if (selected) Sp.Black else Sp.Text, tween(200), label = "chipText")
+            Box(
+                modifier = Modifier
+                    .height(32.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(bg)
+                    .bouncyClick(pressedScale = 0.92f) { onGenreSelected(genre.id) }
+                    .padding(horizontal = 14.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Text(genre.name)
+                Text(
+                    text = genre.name,
+                    style = TextStyle(fontSize = 13.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold),
+                    color = fg,
+                    maxLines = 1
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun greeting(): String {
+    val hour = remember {
+        kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).hour
+    }
+    return stringResource(
+        when (hour) {
+            in 5..11 -> Res.string.home_greeting_morning
+            in 12..17 -> Res.string.home_greeting_afternoon
+            else -> Res.string.home_greeting_evening
+        }
+    )
+}
+
+/** Spotify's 2-column grid of shortcut tiles at the top of Home. */
+@Composable
+private fun QuickAccessGrid(items: List<MetadataBrowseItem>) {
+    val navigationCommands = koinInject<NavigationCommands>()
+    data class Tile(val title: String, val image: String?, val round: Boolean, val route: Routes)
+    val tiles = remember(items) {
+        items.mapNotNull { item ->
+            when (item) {
+                is MetadataBrowseItem.Album -> Tile(item.data.title, item.data.thumbnails.firstOrNull()?.url, false, Routes.Album(item.data.id))
+                is MetadataBrowseItem.Playlist -> Tile(item.data.title, item.data.thumbnails.firstOrNull()?.url, false, Routes.Playlist(item.data.id))
+                is MetadataBrowseItem.Artist -> Tile(item.data.name, item.data.thumbnails.firstOrNull()?.url, true, Routes.Artist(item.data.id))
+                else -> null
+            }
+        }.take(8)
+    }
+    if (tiles.isEmpty()) return
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        tiles.chunked(2).forEach { row ->
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                row.forEach { tile ->
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(Color.White.copy(alpha = 0.08f))
+                            .bouncyClick(pressedScale = 0.96f) { navigationCommands.navigateTo(tile.route) },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AsyncImage(
+                            model = tile.image,
+                            contentDescription = tile.title,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(56.dp)
+                                .then(if (tile.round) Modifier.padding(6.dp).clip(CircleShape) else Modifier)
+                                .background(Sp.Highlight)
+                        )
+                        Text(
+                            text = tile.title,
+                            style = TextStyle(fontSize = 12.sp, lineHeight = 15.sp, fontWeight = FontWeight.Bold),
+                            color = Sp.Text,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
+                }
+                if (row.size == 1) Spacer(Modifier.weight(1f))
             }
         }
     }

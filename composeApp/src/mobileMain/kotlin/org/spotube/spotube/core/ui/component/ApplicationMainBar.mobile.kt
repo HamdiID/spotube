@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBars
 import org.spotube.millennium.composables.MillenniumTopAppBar
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.runtime.Composable
 
 @Composable
@@ -36,6 +37,9 @@ actual fun ApplicationMainBar(
         subtitle = subtitle,
         actions = actions,
         windowInsets = WindowInsets.statusBars,
+        // Spotify-style: the bar blends into whatever is behind it (page colour or artwork gradient).
+        background = SolidColor(Color.Transparent),
+        separatorColor = Color.Transparent,
         navigationIcon = {
             if (backButton) {
                 ApplicationBackButton()

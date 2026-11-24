@@ -27,16 +27,14 @@ import spotube.composeapp.generated.resources.welcome_step_plugins
 import spotube.composeapp.generated.resources.welcome_step_support
 import spotube.composeapp.generated.resources.welcome_step_welcome
 
-/** Order matches the 4 onboarding pages. */
+/** Order matches the 3 onboarding pages. */
 internal val welcomePrimaryLabels: List<StringResource> = listOf(
     Res.string.welcome_lets_go,
     Res.string.welcome_next,
-    Res.string.welcome_next,
     Res.string.welcome_get_started)
 
-/** Short labels for the step switcher. Order matches the 4 onboarding pages. */
+/** Short labels for the step switcher. Order matches the 3 onboarding pages. */
 internal val welcomeStepLabels: List<StringResource> = listOf(
     Res.string.welcome_step_welcome,
-    Res.string.welcome_step_support,
     Res.string.welcome_step_plugins,
     Res.string.welcome_step_guide)

@@ -174,6 +174,8 @@ fun App(
     // out in Settings. The first eligible launch after onboarding only records the baseline, so
     // the prompt never appears right after the onboarding donation page.
     LaunchedEffect(showOnboarding) {
+        // Support reminders are disabled in this build.
+        if (true) return@LaunchedEffect
         if (showOnboarding) return@LaunchedEffect
         // Read the persisted value rather than the collected state, whose initial value is the
         // default (0) until DataStore has emitted once.
@@ -215,10 +217,7 @@ fun App(
     // Below the navigation state, so switching languages keeps the current screen.
     AppLocaleProvider(userSettings.language) {
         SpotubeTheme(settings = userSettings) {
-            CompositionLocalProvider(LocalSupportPrompt provides {
-                supportDialogIsReminder = false
-                showSupportDialog = true
-            }) {
+            CompositionLocalProvider(LocalSupportPrompt provides {}) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     val currentRoute =
                         navigationState.backStacks[navigationState.topLevelRoute]?.last()
@@ -279,10 +278,6 @@ fun App(
                         isConfirming = review.isInstalling,
                         onDismiss = pluginUpdateService::dismissPermissionReview)
                 }
-                SupportDialog(
-                    visible = showSupportDialog,
-                    onDismissRequest = { showSupportDialog = false },
-                    isReminder = supportDialogIsReminder)
             }
         }
     }

@@ -155,9 +155,6 @@ private fun CompactSettingsContent(
                         settings = settings,
                         settingsViewModel = settingsViewModel)
                 }
-                supportSection(
-                    settings = settings,
-                    settingsViewModel = settingsViewModel)
                 updatesSection(
                     settings = settings,
                     settingsViewModel = settingsViewModel)

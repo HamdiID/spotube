@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.foundation.background
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -110,8 +111,23 @@ fun CollectionView(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    val headerTint by org.spotube.spotube.core.ui.spotify.rememberArtworkColor(imageURL.ifBlank { null })
+    val gradientEnd = with(androidx.compose.ui.platform.LocalDensity.current) { 460.dp.toPx() }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(org.spotube.spotube.core.ui.spotify.Sp.Base)
+            .background(
+                androidx.compose.ui.graphics.Brush.verticalGradient(
+                    0f to headerTint,
+                    1f to org.spotube.spotube.core.ui.spotify.Sp.Base,
+                    startY = 0f,
+                    endY = gradientEnd
+                )
+            )
+    ) {
         ApplicationMainBar(
+            transparent = true,
             backButton = true,
             title = if (isCollapsed) {
                 {

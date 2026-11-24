@@ -17,6 +17,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -520,3 +525,31 @@ fun Color.darken(fraction: Float): Color = Color(
     blue = blue * (1f - fraction),
     alpha = alpha
 )
+
+/** Spotify filter pill: green when selected. */
+@Composable
+fun SpChip(
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val bg by animateColorAsState(if (selected) Sp.Green else Sp.Highlight, tween(200), label = "chip")
+    val fg by animateColorAsState(if (selected) Sp.Black else Sp.Text, tween(200), label = "chipText")
+    Box(
+        modifier = modifier
+            .height(32.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(bg)
+            .bouncyClick(pressedScale = 0.92f, onClick = onClick)
+            .padding(horizontal = 14.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        com.composeunstyled.Text(
+            text = text,
+            style = TextStyle(fontSize = 13.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold),
+            color = fg,
+            maxLines = 1
+        )
+    }
+}

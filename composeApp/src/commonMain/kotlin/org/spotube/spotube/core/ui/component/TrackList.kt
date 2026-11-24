@@ -88,6 +88,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
@@ -359,7 +360,18 @@ fun TrackList(
     }
 
     val trackCardContent: @Composable () -> Unit = {
-        MillenniumCard(
+        if (isCompact) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+            ) {
+                visibleTracks.forEachIndexed { displayedIndex, track ->
+                    trackRow(displayedIndex, track)
+                }
+                trackCardFooter()
+            }
+        } else MillenniumCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = TrackCardOuterPadding),
@@ -643,12 +655,17 @@ private fun TrackListRow(
 
     MillenniumListTile(
         modifier = modifier,
-        selected = isSelected || isCurrentTrack,
+        selected = isSelected || (isCurrentTrack && showAlbum),
         onClick = onTrackClick,
         title = {
             TextWithShimmer(
                 text = track.title,
-                style = AppTheme.typography.bodyLarge,
+                style = androidx.compose.ui.text.TextStyle(
+                    fontSize = 15.sp,
+                    lineHeight = 20.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Medium
+                ),
+                color = if (isCurrentTrack) org.spotube.spotube.core.ui.spotify.Sp.Green else org.spotube.spotube.core.ui.spotify.Sp.Text,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis)
         },
@@ -695,7 +712,7 @@ private fun TrackListRow(
 
                 Box(
                     modifier = Modifier
-                        .size(44.dp)
+                        .size(48.dp)
                         .clip(AppTheme.shapes.small)
                         .hoverable(interactionSource = artworkInteractionSource),
                     contentAlignment = Alignment.Center) {
@@ -771,7 +788,7 @@ private fun TrackListRow(
                                 }))
                 }
 
-                TextWithShimmer(
+                if (showAlbum) TextWithShimmer(
                     text = track.durationMs.toDurationString(),
                     style = AppTheme.typography.bodySmall,
                     textAlign = TextAlign.End,
@@ -787,13 +804,13 @@ private fun TrackListRow(
                         isInJam = isInJam,
                         isJamGuest = isJamGuest)
                 } else {
-                    MillenniumIconButton(
+                    org.spotube.spotube.core.ui.spotify.SpIconButton(
+                        imageVector = org.spotube.spotube.core.ui.spotify.SpIcons.More,
+                        contentDescription = stringResource(Res.string.track_options_title),
                         onClick = onShowOptionsClick,
-                        style = MillenniumIconButtonStyle.Quiet) {
-                        MillenniumIcon(
-                            imageVector = Iconsax.Iconsax3DotsMore,
-                            contentDescription = stringResource(Res.string.track_options_title))
-                    }
+                        tint = org.spotube.spotube.core.ui.spotify.Sp.SubText,
+                        iconSize = 22.dp
+                    )
                 }
             }
         })

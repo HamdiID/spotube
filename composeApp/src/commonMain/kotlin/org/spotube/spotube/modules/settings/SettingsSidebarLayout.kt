@@ -167,7 +167,9 @@ private fun SettingsPane(
             platformType == PlatformType.MacOS
 
     val tabs = remember(isDesktopPlatform) {
-        SettingsTab.entries.filter { it != SettingsTab.Desktop || isDesktopPlatform }
+        SettingsTab.entries.filter {
+            it != SettingsTab.Support && (it != SettingsTab.Desktop || isDesktopPlatform)
+        }
     }
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
     val selectedTab = tabs.getOrElse(selectedIndex) { tabs.first() }

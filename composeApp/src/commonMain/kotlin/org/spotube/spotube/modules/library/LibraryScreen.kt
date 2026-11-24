@@ -144,10 +144,11 @@ private fun LibraryTabs(state: LibraryToolbarUiState, onTabSelected: (LibraryTab
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(LibraryTab.entries) { tab ->
-            MillenniumButton(
-                onClick = { onTabSelected(tab) },
-                style = if (state.currentTab == tab) MillenniumButtonStyle.Primary else MillenniumButtonStyle.Secondary
-            ) { Text(stringResource(tab.titleResource)) }
+            org.spotube.spotube.core.ui.spotify.SpChip(
+                text = stringResource(tab.titleResource),
+                selected = state.currentTab == tab,
+                onClick = { onTabSelected(tab) }
+            )
         }
     }
 }
