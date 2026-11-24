@@ -50,23 +50,22 @@ internal fun MediaCardSurface(
         if (hovered || focused || groupFocused || pressed) 1f else 0f,
         tween(140)
     )
-    val scale by animateFloatAsState(if (pressed) 0.985f else 1f, tween(100))
-    val shape = RoundedCornerShape(10.dp)
+    val scale by animateFloatAsState(
+        if (pressed) 0.95f else 1f,
+        androidx.compose.animation.core.spring(dampingRatio = 0.5f, stiffness = 600f)
+    )
+    val shape = RoundedCornerShape(8.dp)
     Box(
         modifier.graphicsLayer { scaleX = scale; scaleY = scale }
             .millenniumSurface(
-                background = Brush.verticalGradient(
-                    listOf(
-                        colors.raised.copy(alpha = highlight),
-                        if (isBlacklisted) colors.danger.copy(alpha = 0.12f + highlight * 0.12f)
-                        else colors.surface.copy(alpha = highlight)
-                    )
+                background = androidx.compose.ui.graphics.SolidColor(
+                    if (isBlacklisted) colors.danger.copy(alpha = 0.12f + highlight * 0.12f)
+                    else colors.raised.copy(alpha = highlight * 0.9f)
                 ),
                 shape = shape,
-                borderColor = (if (focused) colors.accent else colors.border).copy(alpha = highlight),
-                borderWidth = if (focused) 2.dp else 1.dp,
-                innerGlowColor = colors.highlight.copy(alpha = highlight * 0.4f),
-                shadowElevation = (highlight * 4f).dp
+                borderColor = if (focused) colors.accent else null,
+                borderWidth = if (focused) 2.dp else 0.dp,
+                opaqueFill = false
             )
             .clip(shape)
             .onFocusChanged { groupFocused = it.hasFocus }
@@ -75,7 +74,7 @@ internal fun MediaCardSurface(
             .then(
                 if (onClick != null) Modifier.millenniumActionPointer().clickable(
                     interactionSource = interaction,
-                    indication = LocalIndication.current,
+                    indication = null,
                     role = Role.Button,
                     onClick = onClick
                 ) else Modifier

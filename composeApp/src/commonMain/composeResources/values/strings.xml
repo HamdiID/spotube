@@ -1131,4 +1131,9 @@
     <string name="media_browser_featured">Featured</string>
     <string name="media_browser_saved_tracks">Saved Tracks</string>
     <string name="media_browser_top_tracks">Top Tracks</string>
+    <string name="player_playing_from">Playing from</string>
+    <string name="home_greeting_morning">Good morning</string>
+    <string name="home_greeting_afternoon">Good afternoon</string>
+    <string name="home_greeting_evening">Good evening</string>
+    <string name="home_filter_all">All</string>
 </resources>

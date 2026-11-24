@@ -47,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.spotube.spotube.core.ui.component.LocalAnimatedVisibilityScope
 import org.spotube.spotube.core.ui.component.LocalSharedTransitionScope
 import org.spotube.spotube.core.ui.component.sharedElementOrNone
@@ -101,7 +102,7 @@ fun PlayableCard(
     val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
 
     MediaCardSurface(
-        modifier = modifier.width(160.dp),
+        modifier = modifier.width(150.dp),
         onClick = onClick ?: onPlay,
         interactive = onClick != null || onPlay != null || onAddToQueue != null
     ) { highlighted ->
@@ -113,13 +114,13 @@ fun PlayableCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1f)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(6.dp))
                         .sharedElementOrNone(
                             key = sharedElementKey,
                             sharedTransitionScope = sharedTransitionScope,
                             animatedVisibilityScope = animatedVisibilityScope
                         ),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(6.dp)
                 )
 
                 if (onPlay != null || onAddToQueue != null)
@@ -128,7 +129,7 @@ fun PlayableCard(
                         contentAlignment = Alignment.BottomEnd
                     ) {
                         this@Column.AnimatedVisibility(
-                            visible = highlighted || touchInput || (isPlaying && onPlay != null) ||
+                            visible = (highlighted && !touchInput) || (isPlaying && onPlay != null) ||
                                 playLoading || addToQueueLoading,
                             enter = fadeIn(),
                             exit = fadeOut()
@@ -183,21 +184,29 @@ fun PlayableCard(
                     }
             }
             Column(
-                modifier = Modifier.fillMaxWidth().padding(12.dp)
+                modifier = Modifier.fillMaxWidth().padding(start = 2.dp, end = 2.dp, top = 8.dp, bottom = 6.dp)
             ) {
                 TextWithShimmer(
                     text = title,
-                    style = AppTheme.typography.titleSmall,
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontSize = 13.sp,
+                        lineHeight = 17.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+                    ),
+                    color = if (isPlaying) org.spotube.spotube.core.ui.spotify.Sp.Green else org.spotube.spotube.core.ui.spotify.Sp.Text,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 subtitle?.let {
                     TextWithShimmer(
                         text = subtitle,
-                        style = AppTheme.typography.bodySmall,
-                        color = AppTheme.colors.onSurfaceVariant,
-                        maxLines = 1,
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp
+                        ),
+                        color = org.spotube.spotube.core.ui.spotify.Sp.SubText,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                 }

@@ -17,32 +17,7 @@ env:
   COMPOSE_WEBVIEW_COMMIT: b11ac748de1219f9432338c067a2c5dafef3072a
 
 jobs:
-  deps:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: ${{ env.COMPOSE_WEBVIEW_REPO }}
-          ref: ${{ env.COMPOSE_WEBVIEW_COMMIT }}
-          path: compose-webview
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-      - uses: android-actions/setup-android@v3
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: gradle/actions/setup-gradle@v4
-      - name: Publish compose-webview
-        working-directory: compose-webview
-        run: chmod +x gradlew && ./gradlew publishToMavenLocal
-      - uses: actions/upload-artifact@v4
-        with:
-          name: maven-local
-          path: ~/.m2/repository/
-          retention-days: 1
-
   ios:
-    needs: deps
     runs-on: macos-latest
     timeout-minutes: 150
     strategy:
@@ -50,19 +25,26 @@ jobs:
       matrix:
         kind: [device, simulator]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
-          name: maven-local
-          path: ~/.m2/repository/
-      - uses: actions/setup-java@v4
+          repository: ${{ env.COMPOSE_WEBVIEW_REPO }}
+          ref: ${{ env.COMPOSE_WEBVIEW_COMMIT }}
+          path: compose-webview
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 21
+      - uses: android-actions/setup-android@v4
       - uses: dtolnay/rust-toolchain@stable
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Publish compose-webview
+        working-directory: compose-webview
+        run: |
+          set -o pipefail
+          chmod +x gradlew && ./gradlew publishToMavenLocal 2>&1 | tee ../build.log | tail -5
       - run: chmod +x gradlew
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: iosApp/Pods
           key: pods-${{ runner.os }}-${{ hashFiles('iosApp/Podfile.lock') }}

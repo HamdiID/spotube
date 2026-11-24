@@ -42,6 +42,7 @@ import org.spotube.millennium.composables.MillenniumTopAppBarThemeProperties
 import org.spotube.millennium.composables.defaultMillenniumModalBottomSheetTheme
 import org.spotube.millennium.composables.defaultMillenniumTopAppBarTheme
 import org.spotube.millennium.theme.MillenniumColors
+import org.spotube.millennium.theme.MillenniumColorSchemes
 import org.spotube.millennium.theme.MillenniumDarkThemeComponents
 import org.spotube.millennium.theme.MillenniumLightThemeComponents
 import org.spotube.millennium.theme.MillenniumPalette
@@ -147,14 +148,33 @@ private fun style(
     fontWeight = weight
 )
 
+/** Flat Spotify palette fed to Millennium so every stock component loses its gloss. */
+val SpotifyMillenniumColors = MillenniumColors(
+    background = Color(0xFF121212),
+    surface = Color(0xFF181818),
+    raised = Color(0xFF1F1F1F),
+    inset = Color(0xFF141414),
+    text = Color(0xFFFFFFFF),
+    muted = Color(0xFFB3B3B3),
+    border = Color(0xFF2A2A2A),
+    highlight = Color(0xFF262626),
+    accent = Color(0xFF1ED760),
+    accentTop = Color(0xFF1ED760),
+    accentBottom = Color(0xFF1DB954),
+    onAccent = Color(0xFF000000),
+    success = Color(0xFF1ED760),
+    danger = Color(0xFFF15E6C),
+    scrim = Color(0xCC000000)
+)
+
 val AppDefaultTypography = AppTypography(
-    displaySmall = style(36, 44),
-    headlineLarge = style(32, 40),
-    headlineMedium = style(28, 36),
-    headlineSmall = style(24, 32),
-    titleLarge = style(22, 28, FontWeight.Medium),
-    titleMedium = style(16, 24, FontWeight.Medium),
-    titleSmall = style(14, 20, FontWeight.Medium),
+    displaySmall = style(36, 44, FontWeight.Black),
+    headlineLarge = style(32, 40, FontWeight.Black),
+    headlineMedium = style(28, 36, FontWeight.Bold),
+    headlineSmall = style(24, 32, FontWeight.Bold),
+    titleLarge = style(22, 28, FontWeight.Bold),
+    titleMedium = style(16, 24, FontWeight.Bold),
+    titleSmall = style(14, 20, FontWeight.SemiBold),
     bodyLarge = style(16, 24),
     bodyMedium = style(14, 20),
     bodySmall = style(12, 16),
@@ -172,9 +192,9 @@ data class AppShapes(
 )
 
 val AppDefaultShapes = AppShapes(
-    small = RoundedCornerShape(8.dp),
-    medium = RoundedCornerShape(12.dp),
-    large = RoundedCornerShape(16.dp)
+    small = RoundedCornerShape(4.dp),
+    medium = RoundedCornerShape(8.dp),
+    large = RoundedCornerShape(12.dp)
 )
 
 val LocalAppColors =
@@ -201,11 +221,8 @@ fun SpotubeTheme(
     settings: UserSettings,
     content: @Composable () -> Unit
 ) {
-    val isDarkTheme = when (settings.theme) {
-        Theme.LIGHT -> false
-        Theme.DARK -> true
-        Theme.SYSTEM -> isSystemDarkTheme()
-    }
+    // Spotify look: always dark, one green accent, flat surfaces.
+    val isDarkTheme = true
     val palette: MillenniumPalette = settings.palette
 
     val darkTheme = MillenniumDarkThemeComponents
@@ -215,6 +232,14 @@ fun SpotubeTheme(
         dark = isDarkTheme,
         config = MillenniumThemeConfig(
             palette = palette,
+            colorSchemes = MillenniumColorSchemes(
+                light = SpotifyMillenniumColors,
+                dark = SpotifyMillenniumColors,
+                orangeLight = SpotifyMillenniumColors,
+                orangeDark = SpotifyMillenniumColors,
+                limeLight = SpotifyMillenniumColors,
+                limeDark = SpotifyMillenniumColors
+            ),
             dark = darkTheme.copy(
                 topAppBarTheme = MillenniumTopAppBarTheme(
                     properties = darkTheme.topAppBarTheme.properties.copy(

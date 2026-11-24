@@ -17,33 +17,40 @@
 
 package org.spotube.spotube.modules.shell
 
-
-import org.spotube.millennium.composables.MillenniumIcon
-import org.spotube.millennium.composables.MillenniumIconButton
-import org.spotube.millennium.composables.MillenniumIconButtonStyle
-import androidx.compose.foundation.shape.CircleShape
-
-import org.spotube.spotube.core.ui.theming.AppTheme
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.jetbrains.compose.resources.stringResource
 import org.spotube.spotube.core.audioplayer.AudioPlayerQueue
 import org.spotube.spotube.core.audioplayer.QueueEntry
+import org.spotube.spotube.core.ui.spotify.Sp
+import org.spotube.spotube.core.ui.spotify.SpIconButton
+import org.spotube.spotube.core.ui.spotify.SpIcons
 import org.spotube.spotube.modules.saved_tracks.SavedState
 import org.spotube.spotube.modules.saved_tracks.SavedTracksViewModel
 import org.spotube.spotube.modules.saved_tracks.rememberIsSavedTracks
-import org.spotube.spotube.resources.iconsax.Iconsax
-import org.spotube.spotube.resources.iconsax.IconsaxHeart
-import org.spotube.spotube.resources.iconsax.IconsaxHeart2
-import org.jetbrains.compose.resources.stringResource
 import spotube.composeapp.generated.resources.Res
 import spotube.composeapp.generated.resources.player_like_content_description
 import spotube.composeapp.generated.resources.player_unlike_content_description
 
+/** Spotify's "add to Liked Songs" button: an outlined plus that pops into a green check. */
 @Composable
 fun PlayerHeartButton(
     audioPlayerQueue: AudioPlayerQueue,
-    savedTracksViewModel: SavedTracksViewModel) {
+    savedTracksViewModel: SavedTracksViewModel,
+    iconSize: Dp = 24.dp
+) {
     val currentQueueEntry by audioPlayerQueue.currentQueueEntryFlow.collectAsStateWithLifecycle()
     val currentTrackId = (currentQueueEntry as? QueueEntry.StreamingTrack)?.track?.id
     val isSavedTrackState =
@@ -57,15 +64,31 @@ fun PlayerHeartButton(
     } else {
         isInSavedIds
     }
+    val isPending = currentTrackId != null && currentTrackId in pendingSavedTrackIds
 
-    MillenniumIconButton(
-        onClick = { currentTrackId?.let { savedTracksViewModel.toggleSavedTrack(it, isLiked) } },
-        enabled = isSavedTrackState is SavedState.Success,
-        loading = currentTrackId != null && currentTrackId in pendingSavedTrackIds,
-        style = MillenniumIconButtonStyle.Secondary) {
-        MillenniumIcon(
-            imageVector = if (isLiked) Iconsax.IconsaxHeart2 else Iconsax.IconsaxHeart,
-            contentDescription = stringResource(if (isLiked) Res.string.player_unlike_content_description else Res.string.player_like_content_description),
-            tint = if (isLiked) AppTheme.colors.primary else AppTheme.colors.onSurfaceVariant)
+    val pop = remember { Animatable(1f) }
+    var first by remember { mutableStateOf(true) }
+    LaunchedEffect(isLiked) {
+        if (first) {
+            first = false
+            return@LaunchedEffect
+        }
+        if (isLiked) {
+            pop.snapTo(0.6f)
+            pop.animateTo(1f, spring(dampingRatio = 0.35f, stiffness = Spring.StiffnessMedium))
+        }
     }
+
+    SpIconButton(
+        imageVector = if (isLiked) SpIcons.CheckCircle else SpIcons.AddCircle,
+        contentDescription = stringResource(
+            if (isLiked) Res.string.player_unlike_content_description
+            else Res.string.player_like_content_description
+        ),
+        onClick = { currentTrackId?.let { savedTracksViewModel.toggleSavedTrack(it, isLiked) } },
+        enabled = isSavedTrackState is SavedState.Success && !isPending,
+        tint = if (isLiked) Sp.Green else Sp.Text,
+        iconSize = iconSize,
+        modifier = Modifier.graphicsLayer { scaleX = pop.value; scaleY = pop.value }
+    )
 }

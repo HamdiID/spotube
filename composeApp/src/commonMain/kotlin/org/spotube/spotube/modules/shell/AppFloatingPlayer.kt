@@ -17,18 +17,13 @@
 
 package org.spotube.spotube.modules.shell
 
-
-import org.spotube.millennium.composables.MillenniumIcon
-import org.spotube.millennium.composables.MillenniumIconButton
-import org.spotube.millennium.composables.MillenniumIconButtonStyle
-import org.spotube.millennium.composables.MillenniumProgress
-import org.spotube.millennium.theme.millenniumSurface
-import org.spotube.millennium.theme.millenniumPanelBrush
-import org.spotube.millennium.theme.MillenniumTheme
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,49 +34,54 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-
-import org.spotube.spotube.core.ui.theming.AppTheme
-import com.composeunstyled.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import org.spotube.spotube.core.audioplayer.AudioPlayerQueue
-import org.spotube.spotube.modules.saved_tracks.SavedTracksViewModel
-import org.spotube.spotube.modules.saved_tracks.SAVED_TRACKS_COLLECTION_ID
-import org.spotube.spotube.resources.iconsax.Iconsax
-import org.spotube.spotube.resources.iconsax.IconsaxPause
-import org.spotube.spotube.resources.iconsax.IconsaxPlay
-import org.spotube.spotube.resources.iconsax.IconsaxMusic
-import org.jetbrains.compose.resources.stringResource
-import spotube.composeapp.generated.resources.Res
-import spotube.composeapp.generated.resources.player_play_content_description
-import spotube.composeapp.generated.resources.player_pause_content_description
-import spotube.composeapp.generated.resources.player_nothing_playing
+import com.composeunstyled.Text
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.spotube.spotube.core.audioplayer.AudioPlayerInterface
+import org.spotube.spotube.core.audioplayer.AudioPlayerQueue
+import org.spotube.spotube.core.ui.spotify.Sp
+import org.spotube.spotube.core.ui.spotify.SpIcon
+import org.spotube.spotube.core.ui.spotify.SpIconButton
+import org.spotube.spotube.core.ui.spotify.SpIcons
+import org.spotube.spotube.core.ui.spotify.darken
+import org.spotube.spotube.core.ui.spotify.rememberArtworkColor
+import org.spotube.spotube.modules.saved_tracks.SAVED_TRACKS_COLLECTION_ID
+import org.spotube.spotube.modules.saved_tracks.SavedTracksViewModel
+import spotube.composeapp.generated.resources.Res
+import spotube.composeapp.generated.resources.player_nothing_playing
+import spotube.composeapp.generated.resources.player_pause_content_description
+import spotube.composeapp.generated.resources.player_play_content_description
 
 internal val FloatingPlayerContentHeight = 64.dp
 internal val FloatingPlayerBottomBleed = 16.dp
 
-// The floating player on small screens that appears above the floating AppBottombar
-//
-// on left the album art, song title, artists grouped together
-// on right the playback controls
-// top border is actually the progress bar
-// users can skip to next or previous track by swiping left or right on the player
-//
-// the player can be expanded to the full screen by swiping up on the player, and can be collapsed
-// back to the floating player by swiping down on the player
+// Spotify-style mini player: a rounded card tinted with the artwork colour that floats above the
+// bottom bar. Swipe it sideways to skip, swipe it up (handled by the sheet) to open the player.
 @Composable
 fun AppFloatingPlayer(
     modifier: Modifier = Modifier,
@@ -114,6 +114,8 @@ fun AppFloatingPlayer(
         modifier = modifier,
         albumArtModifier = albumArtModifier,
         onPlayPause = ::onPlayPause,
+        onSkipNext = { scope.launch { runCatching { audioPlayer.skipToNext() } } },
+        onSkipPrevious = { scope.launch { runCatching { audioPlayer.skipToPrevious() } } },
         heartButton = {
             PlayerHeartButton(
                 audioPlayerQueue = audioPlayerQueue,
@@ -129,77 +131,104 @@ internal fun FloatingPlayerContent(
     modifier: Modifier = Modifier,
     albumArtModifier: Modifier = Modifier,
     onPlayPause: () -> Unit,
+    onSkipNext: () -> Unit = {},
+    onSkipPrevious: () -> Unit = {},
     heartButton: @Composable () -> Unit
 ) {
     val coverModel = playerUiState.coverModel
+    val tint by rememberArtworkColor(coverModel, fallback = Sp.Highlight)
+    val swipe = remember { Animatable(0f) }
+    val scope = rememberCoroutineScope()
+    val hasQueue = playerUiState.queue.isNotEmpty()
 
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(FloatingPlayerContentHeight + FloatingPlayerBottomBleed)
-            .millenniumSurface(
-                background = millenniumPanelBrush(MillenniumTheme.colors),
-                shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-                borderColor = MillenniumTheme.colors.border,
-                borderWidth = 1.dp,
-            )
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                // Only the surface extends beneath the navigation bar, not the controls.
-                .padding(bottom = FloatingPlayerBottomBleed)
+                .fillMaxWidth()
+                .height(FloatingPlayerContentHeight)
+                .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(tint.darken(0.28f))
+                .pointerInput(hasQueue) {
+                    if (!hasQueue) return@pointerInput
+                    val threshold = 72.dp.toPx()
+                    detectHorizontalDragGestures(
+                        onDragEnd = {
+                            val value = swipe.value
+                            scope.launch {
+                                when {
+                                    value <= -threshold -> onSkipNext()
+                                    value >= threshold -> onSkipPrevious()
+                                }
+                                swipe.animateTo(0f, spring(dampingRatio = 0.6f))
+                            }
+                        },
+                        onDragCancel = { scope.launch { swipe.animateTo(0f) } },
+                        onHorizontalDrag = { change, amount ->
+                            change.consume()
+                            scope.launch { swipe.snapTo(swipe.value + amount * 0.6f) }
+                        }
+                    )
+                }
+                .drawBehind {
+                    // Progress line along the bottom edge of the card, like Spotify.
+                    val h = 2.dp.toPx()
+                    val inset = 8.dp.toPx()
+                    val y = size.height - h
+                    val w = size.width - inset * 2
+                    drawRect(Color.White.copy(alpha = 0.22f), Offset(inset, y), Size(w, h))
+                    drawRect(Color.White, Offset(inset, y), Size(w * playerUiState.progress, h))
+                }
         ) {
-            MillenniumProgress(
-                progress = playerUiState.progress,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(2.dp)
-            )
-            Spacer(modifier = Modifier.height(10.dp))
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
+                    .fillMaxSize()
+                    .padding(start = 6.dp, end = 2.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .graphicsLayer {
+                            translationX = swipe.value
+                            alpha = 1f - (kotlin.math.abs(swipe.value) / 300f).coerceIn(0f, 0.7f)
+                        },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = Modifier
                             .size(42.dp)
                             .then(albumArtModifier)
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(AppTheme.colors.onSurface.copy(alpha = 0.12f)),
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(Color.Black.copy(alpha = 0.25f)),
                         contentAlignment = Alignment.Center
                     ) {
                         if (coverModel != null) AsyncImage(
                             model = coverModel,
                             contentDescription = playerUiState.title,
-                            modifier = Modifier
-                                .fillMaxSize(),
+                            modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
-                        else MillenniumIcon(
-                            Iconsax.IconsaxMusic, contentDescription = null,
-                            tint = AppTheme.colors.onSurfaceVariant, modifier = Modifier.size(22.dp)
-                        )
+                        else SpIcon(SpIcons.Music, null, tint = Sp.SubText, size = 22.dp)
                     }
-                    Column(modifier = Modifier.padding(start = 10.dp)) {
+                    Spacer(Modifier.width(10.dp))
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = if (playerUiState.queue.isEmpty()) stringResource(Res.string.player_nothing_playing) else playerUiState.title,
-                            style = AppTheme.typography.bodyMedium,
-                            color = AppTheme.colors.onSurface,
+                            text = if (!hasQueue) stringResource(Res.string.player_nothing_playing) else playerUiState.title,
+                            style = TextStyle(fontSize = 13.sp, lineHeight = 17.sp, fontWeight = FontWeight.Bold),
+                            color = Sp.Text,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
-                        if (playerUiState.queue.isNotEmpty()) Text(
+                        if (hasQueue) Text(
                             text = playerUiState.artists,
-                            style = AppTheme.typography.bodySmall,
-                            color = AppTheme.colors.onSurfaceVariant,
+                            style = TextStyle(fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.Normal),
+                            color = Color.White.copy(alpha = 0.72f),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -207,18 +236,17 @@ internal fun FloatingPlayerContent(
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    heartButton()
-                    Spacer(modifier = Modifier.size(8.dp))
-                    MillenniumIconButton(
+                    if (hasQueue) heartButton()
+                    SpIconButton(
+                        imageVector = if (playerUiState.isPlaying) SpIcons.Pause else SpIcons.Play,
+                        contentDescription = stringResource(
+                            if (playerUiState.isPlaying) Res.string.player_pause_content_description
+                            else Res.string.player_play_content_description
+                        ),
                         onClick = onPlayPause,
-                        enabled = playerUiState.queue.isNotEmpty(),
-                        style = MillenniumIconButtonStyle.Secondary
-                    ) {
-                        MillenniumIcon(
-                            if (playerUiState.isPlaying) Iconsax.IconsaxPause else Iconsax.IconsaxPlay,
-                            contentDescription = stringResource(if (playerUiState.isPlaying) Res.string.player_pause_content_description else Res.string.player_play_content_description)
-                        )
-                    }
+                        enabled = hasQueue,
+                        iconSize = 28.dp
+                    )
                 }
             }
         }

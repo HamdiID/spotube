@@ -929,4 +929,9 @@
     <string name="media_browser_featured">À la une</string>
     <string name="media_browser_saved_tracks">Titres enregistrés</string>
     <string name="media_browser_top_tracks">Titres populaires</string>
+    <string name="player_playing_from">Lecture depuis</string>
+    <string name="home_greeting_morning">Bonjour</string>
+    <string name="home_greeting_afternoon">Bon après-midi</string>
+    <string name="home_greeting_evening">Bonsoir</string>
+    <string name="home_filter_all">Tout</string>
 </resources>

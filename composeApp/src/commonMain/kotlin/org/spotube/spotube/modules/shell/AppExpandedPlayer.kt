@@ -19,6 +19,35 @@ package org.spotube.spotube.modules.shell
 
 
 import org.spotube.millennium.composables.MillenniumIcon
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
+import org.spotube.spotube.core.ui.spotify.Sp
+import org.spotube.spotube.core.ui.spotify.SpIcon
+import org.spotube.spotube.core.ui.spotify.SpIconButton
+import org.spotube.spotube.core.ui.spotify.SpIcons
+import org.spotube.spotube.core.ui.spotify.SpPlayButton
+import org.spotube.spotube.core.ui.spotify.SpSeekBar
+import org.spotube.spotube.core.ui.spotify.bouncyClick
+import org.spotube.spotube.core.ui.spotify.darken
+import org.spotube.spotube.core.ui.spotify.rememberArtworkColor
+import spotube.composeapp.generated.resources.devices_title
+import spotube.composeapp.generated.resources.player_playing_from
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -64,6 +93,7 @@ import com.composeunstyled.Text
 import com.composeunstyled.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -169,6 +199,7 @@ import spotube.composeapp.generated.resources.queue_title
 // below that we have the playback controls and the progress bar, which should be similar to the
 // large player but with a different layout to fit the smaller screen
 // And at the very end we will have the volume slider
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppExpandedPlayer(
     modifier: Modifier = Modifier,
@@ -281,7 +312,26 @@ fun AppExpandedPlayer(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize().background(AppTheme.colors.background)) {
+    val artworkTint by rememberArtworkColor(coverModel)
+    val artScale by animateFloatAsState(
+        targetValue = if (playerUiState.isPlaying) 1f else 0.88f,
+        animationSpec = spring(dampingRatio = 0.55f, stiffness = Spring.StiffnessLow),
+        label = "artScale"
+    )
+    val artSwipe = remember { Animatable(0f) }
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Sp.Base)
+            .background(
+                Brush.verticalGradient(
+                    0f to artworkTint,
+                    0.5f to artworkTint.darken(0.55f),
+                    1f to Sp.Base
+                )
+            )
+    ) {
         if (playerOptionsUiState.isMoreOptionsSheetOpen) {
             MillenniumModalBottomSheet(
                 state = moreOptionsSheetState,
@@ -454,83 +504,114 @@ fun AppExpandedPlayer(
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.safeDrawing)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                MillenniumIconButton(
+                SpIconButton(
+                    imageVector = SpIcons.ChevronDown,
+                    contentDescription = stringResource(Res.string.player_collapse_content_description),
                     onClick = onCollapse,
-                    style = MillenniumIconButtonStyle.Quiet
-                ) {
-                    MillenniumIcon(
-                        Iconsax.IconsaxArrowDown4,
-                        contentDescription = stringResource(Res.string.player_collapse_content_description)
-                    )
-                }
-                Text(
-                    text = stringResource(Res.string.player_now_playing),
-                    style = AppTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center,
-                    maxLines = 1
-                )
-                MillenniumIconButton(
-                    onClick = playerOptionsViewModel::showMoreOptionsSheet,
-                    style = MillenniumIconButtonStyle.Quiet
-                ) {
-                    MillenniumIcon(Iconsax.Iconsax3DotsMore, contentDescription = stringResource(Res.string.player_options_content_description))
-                }
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp, bottom = 24.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.84f)
-                        .aspectRatio(1f)
-                        .then(albumArtModifier)
-                        .clip(RoundedCornerShape(22.dp))
-                        .background(AppTheme.colors.surfaceContainerHighest)
-                ) {
-                    AsyncImage(
-                        model = coverModel,
-                        contentDescription = playerUiState.title,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 2.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                PlayerHeartButton(
-                    audioPlayerQueue = audioPlayerQueue,
-                    savedTracksViewModel = savedTracksViewModel
+                    iconSize = 30.dp
                 )
                 Column(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = playerUiState.title,
-                        style = AppTheme.typography.headlineSmall,
+                        text = stringResource(Res.string.player_playing_from).uppercase(),
+                        style = TextStyle(fontSize = 10.sp, lineHeight = 12.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp),
+                        color = Color.White.copy(alpha = 0.75f),
+                        maxLines = 1
+                    )
+                    Text(
+                        text = playerUiState.album.ifBlank { stringResource(Res.string.player_now_playing) },
+                        style = TextStyle(fontSize = 13.sp, lineHeight = 17.sp, fontWeight = FontWeight.Bold),
+                        color = Sp.Text,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center
+                    )
+                }
+                SpIconButton(
+                    imageVector = SpIcons.More,
+                    contentDescription = stringResource(Res.string.player_options_content_description),
+                    onClick = playerOptionsViewModel::showMoreOptionsSheet
+                )
+            }
+
+            Spacer(modifier = Modifier.height(36.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .graphicsLayer {
+                        scaleX = artScale
+                        scaleY = artScale
+                        translationX = artSwipe.value
+                        rotationZ = artSwipe.value / 60f
+                    }
+                    .pointerInput(isJamGuest) {
+                        if (isJamGuest) return@pointerInput
+                        val threshold = 90.dp.toPx()
+                        detectHorizontalDragGestures(
+                            onDragEnd = {
+                                val v = artSwipe.value
+                                scope.launch {
+                                    if (v <= -threshold) onSkipNext()
+                                    else if (v >= threshold) onSkipPrevious()
+                                    artSwipe.animateTo(0f, spring(dampingRatio = 0.55f, stiffness = Spring.StiffnessMediumLow))
+                                }
+                            },
+                            onDragCancel = { scope.launch { artSwipe.animateTo(0f) } },
+                            onHorizontalDrag = { change, amount ->
+                                change.consume()
+                                scope.launch { artSwipe.snapTo(artSwipe.value + amount * 0.7f) }
+                            }
+                        )
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .then(albumArtModifier)
+                        .shadow(28.dp, RoundedCornerShape(8.dp), ambientColor = Color.Black, spotColor = Color.Black)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Sp.Highlight),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (coverModel != null) {
+                        AsyncImage(
+                            model = coverModel,
+                            contentDescription = playerUiState.title,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        SpIcon(SpIcons.Music, null, tint = Sp.SubText, size = 96.dp)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = playerUiState.title,
+                        style = TextStyle(fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.Bold),
+                        color = Sp.Text,
+                        maxLines = 1,
+                        modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE, initialDelayMillis = 2000)
                     )
                     PlayerArtistsText(
                         artists = playerUiState.artistList,
@@ -539,125 +620,142 @@ fun AppExpandedPlayer(
                             // The page opens beneath the player, so get out of the way
                             onCollapse()
                         },
-                        style = AppTheme.typography.bodyLarge,
-                        color = AppTheme.colors.onSurfaceVariant,
-                        textAlign = TextAlign.Center
+                        style = TextStyle(fontSize = 16.sp, lineHeight = 22.sp, fontWeight = FontWeight.Normal),
+                        color = Color.White.copy(alpha = 0.7f)
                     )
                 }
-                MillenniumIconButton(
-                    onClick = onQueue,
-                    style = MillenniumIconButtonStyle.Secondary
-                ) {
-                    MillenniumIcon(Iconsax.IconsaxMusicFilter, contentDescription = stringResource(Res.string.queue_title))
-                }
-            }
-
-            Column(modifier = Modifier.padding(top = 20.dp)) {
-                MillenniumSlider(
-                    value = seekProgress,
-                    onValueChange = {
-                        seekProgress = it
-                        isSeeking = true
-                    },
-                    onValueChangeFinished = {
-                        isSeeking = false
-                        onSeekFinished()
-                    },
-                    enabled = playerUiState.seekDuration.inWholeMilliseconds > 0L,
-                    label = stringResource(Res.string.player_seek_label),
-                    modifier = Modifier.fillMaxWidth()
+                Spacer(Modifier.width(12.dp))
+                PlayerHeartButton(
+                    audioPlayerQueue = audioPlayerQueue,
+                    savedTracksViewModel = savedTracksViewModel,
+                    iconSize = 28.dp
                 )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 2.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = formatPlayerTime(playerUiState.position),
-                        style = AppTheme.typography.labelSmall,
-                        color = AppTheme.colors.onSurfaceVariant
-                    )
-                    Text(
-                        text = formatPlayerTime(playerUiState.displayDuration),
-                        style = AppTheme.typography.labelSmall,
-                        color = AppTheme.colors.onSurfaceVariant
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, bottom = 12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    MillenniumIconButton(
-                        onClick = ::onShuffleToggle,
-                        enabled = !isJamGuest,
-                        style = MillenniumIconButtonStyle.Quiet
-                    ) {
-                        MillenniumIcon(
-                            Iconsax.IconsaxShuffle,
-                            contentDescription = stringResource(if (playerUiState.isShuffling) Res.string.player_disable_shuffle_content_description else Res.string.player_enable_shuffle_content_description),
-                            tint = if (playerUiState.isShuffling) {
-                                AppTheme.colors.primary
-                            } else {
-                                AppTheme.colors.onSurfaceVariant
-                            }
-                        )
-                    }
-                    MillenniumIconButton(
-                        onClick = ::onSkipPrevious,
-                        enabled = !isJamGuest,
-                        style = MillenniumIconButtonStyle.Quiet
-                    ) {
-                        MillenniumIcon(Iconsax.IconsaxPrevious, contentDescription = stringResource(Res.string.player_previous_content_description))
-                    }
-                    MillenniumIconButton(
-                        onClick = ::onPlayPause,
-                        style = MillenniumIconButtonStyle.Primary
-                    ) {
-                        MillenniumIcon(
-                            if (playerUiState.isPlaying) Iconsax.IconsaxPause else Iconsax.IconsaxPlay,
-                            contentDescription = stringResource(if (playerUiState.isPlaying) Res.string.player_pause_content_description else Res.string.player_play_content_description),
-                            modifier = Modifier.size(30.dp),
-                            tint = LocalTextStyle.current.color
-                        )
-                    }
-                    MillenniumIconButton(
-                        onClick = ::onSkipNext,
-                        enabled = !isJamGuest,
-                        style = MillenniumIconButtonStyle.Quiet
-                    ) {
-                        MillenniumIcon(Iconsax.IconsaxNext, contentDescription = stringResource(Res.string.player_next_content_description))
-                    }
-                    MillenniumIconButton(
-                        onClick = ::onLoopToggle,
-                        enabled = !isJamGuest,
-                        style = MillenniumIconButtonStyle.Quiet
-                    ) {
-                        MillenniumIcon(
-                            imageVector = when (playerUiState.loopState) {
-                                LoopState.NONE -> Iconsax.IconsaxRepeateMusic
-                                LoopState.ONE -> Iconsax.IconsaxRepeateOne
-                                LoopState.ALL -> Iconsax.IconsaxRepeatMusic
-                            },
-                            contentDescription = stringResource(when (playerUiState.loopState) { LoopState.NONE -> Res.string.player_loop_mode_none; LoopState.ONE -> Res.string.player_loop_mode_one; LoopState.ALL -> Res.string.player_loop_mode_all }),
-                            tint = if (playerUiState.loopState == LoopState.NONE) {
-                                AppTheme.colors.onSurfaceVariant
-                            } else {
-                                AppTheme.colors.primary
-                            }
-                        )
-                    }
-                }
             }
 
-            LyricsPreviewCard(
+            Spacer(modifier = Modifier.height(12.dp))
+            SpSeekBar(
+                value = seekProgress,
+                onValueChange = {
+                    seekProgress = it
+                    isSeeking = true
+                },
+                onValueChangeFinished = {
+                    isSeeking = false
+                    onSeekFinished()
+                },
+                enabled = playerUiState.seekDuration.inWholeMilliseconds > 0L,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val shownPosition = if (isSeeking) {
+                    (playerUiState.seekDuration.inWholeMilliseconds * seekProgress).toLong().milliseconds
+                } else playerUiState.position
+                Text(
+                    text = formatPlayerTime(shownPosition),
+                    style = TextStyle(fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.Medium),
+                    color = Color.White.copy(alpha = 0.7f)
+                )
+                Text(
+                    text = formatPlayerTime(playerUiState.displayDuration),
+                    style = TextStyle(fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.Medium),
+                    color = Color.White.copy(alpha = 0.7f)
+                )
+            }
+
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(top = 8.dp, bottom = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ToggleIcon(
+                    imageVector = SpIcons.Shuffle,
+                    active = playerUiState.isShuffling,
+                    enabled = !isJamGuest,
+                    contentDescription = stringResource(if (playerUiState.isShuffling) Res.string.player_disable_shuffle_content_description else Res.string.player_enable_shuffle_content_description),
+                    onClick = ::onShuffleToggle
+                )
+                SpIconButton(
+                    imageVector = SpIcons.Previous,
+                    contentDescription = stringResource(Res.string.player_previous_content_description),
+                    onClick = ::onSkipPrevious,
+                    enabled = !isJamGuest,
+                    iconSize = 40.dp,
+                    touchSize = 56.dp
+                )
+                SpPlayButton(
+                    isPlaying = playerUiState.isPlaying,
+                    onClick = ::onPlayPause,
+                    size = 68.dp,
+                    background = Sp.Text,
+                    glyph = Sp.Black,
+                    contentDescription = stringResource(if (playerUiState.isPlaying) Res.string.player_pause_content_description else Res.string.player_play_content_description)
+                )
+                SpIconButton(
+                    imageVector = SpIcons.Next,
+                    contentDescription = stringResource(Res.string.player_next_content_description),
+                    onClick = ::onSkipNext,
+                    enabled = !isJamGuest,
+                    iconSize = 40.dp,
+                    touchSize = 56.dp
+                )
+                ToggleIcon(
+                    imageVector = if (playerUiState.loopState == LoopState.ONE) SpIcons.RepeatOne else SpIcons.Repeat,
+                    active = playerUiState.loopState != LoopState.NONE,
+                    enabled = !isJamGuest,
+                    contentDescription = stringResource(when (playerUiState.loopState) { LoopState.NONE -> Res.string.player_loop_mode_none; LoopState.ONE -> Res.string.player_loop_mode_one; LoopState.ALL -> Res.string.player_loop_mode_all }),
+                    onClick = ::onLoopToggle
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                SpIconButton(
+                    imageVector = SpIcons.Devices,
+                    contentDescription = stringResource(Res.string.devices_title),
+                    onClick = {
+                        navigationCommands.navigateTo(Routes.Devices)
+                        onCollapse()
+                    },
+                    tint = Color.White.copy(alpha = 0.85f),
+                    iconSize = 20.dp
+                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    SpIconButton(
+                        imageVector = SpIcons.Timer,
+                        contentDescription = stringResource(Res.string.player_sleep_timer),
+                        onClick = {
+                            playerOptionsViewModel.showSleepTimerDialog()
+                            onSleepTimer()
+                        },
+                        tint = Color.White.copy(alpha = 0.85f),
+                        iconSize = 20.dp
+                    )
+                    SpIconButton(
+                        imageVector = SpIcons.Queue,
+                        contentDescription = stringResource(Res.string.queue_title),
+                        onClick = onQueue,
+                        tint = Color.White.copy(alpha = 0.85f),
+                        iconSize = 22.dp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            LyricsPreviewCard(
+                tint = artworkTint,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
                 onExpand = onExpandLyrics
             )
         }
@@ -687,20 +785,24 @@ private fun rememberSharedAlbumArtModifier(
 
 @Composable
 private fun LyricsPreviewCard(
+    tint: Color,
     modifier: Modifier = Modifier,
     onExpand: () -> Unit,
     viewModel: LyricsViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val syncedLyrics = uiState.syncedLyrics ?: emptyList()
-    val isLoading = uiState.isLoading
-    if (syncedLyrics.isEmpty() || isLoading) return
+    if (syncedLyrics.isEmpty() || uiState.isLoading) return
+    val current = uiState.currentIndex.coerceIn(0, syncedLyrics.lastIndex)
+    val first = (current - 1).coerceAtLeast(0)
+    val last = (first + 4).coerceAtMost(syncedLyrics.lastIndex)
 
-    MillenniumCard(
-        modifier = modifier.clickable(onClick = onExpand),
-        contentPadding = PaddingValues(12.dp),
-        contentSpacing = 8.dp,
-        shadowElevation = 2.dp
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(tint.darken(0.12f))
+            .bouncyClick(pressedScale = 0.98f, onClick = onExpand)
+            .padding(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -709,28 +811,64 @@ private fun LyricsPreviewCard(
         ) {
             Text(
                 text = stringResource(Res.string.player_lyrics),
-                style = AppTheme.typography.labelMedium,
-                color = MillenniumTheme.colors.muted
+                style = TextStyle(fontSize = 16.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold),
+                color = Sp.Text
             )
-            MillenniumIconButton(
-                onClick = onExpand,
-                style = MillenniumIconButtonStyle.Quiet
-            ) {
-                MillenniumIcon(
-                    Iconsax.IconsaxArrowSquareUp,
-                    contentDescription = stringResource(Res.string.player_expand_lyrics_content_description),
-                    tint = MillenniumTheme.colors.muted
-                )
-            }
+            SpIcon(
+                imageVector = SpIcons.Lyrics,
+                contentDescription = stringResource(Res.string.player_expand_lyrics_content_description),
+                tint = Sp.Text,
+                size = 20.dp
+            )
         }
+        Spacer(Modifier.height(14.dp))
+        for (i in first..last) key(i) {
+            val isCurrent = i == uiState.currentIndex
+            val isPast = i < uiState.currentIndex
+            val lineColor by animateColorAsState(
+                when {
+                    isCurrent -> Sp.Text
+                    isPast -> Color.White.copy(alpha = 0.55f)
+                    else -> Color.Black.copy(alpha = 0.55f)
+                },
+                tween(320),
+                label = "lyric"
+            )
+            Text(
+                text = syncedLyrics[i].text.ifBlank { "♪" },
+                style = TextStyle(fontSize = 20.sp, lineHeight = 27.sp, fontWeight = FontWeight.Bold),
+                color = lineColor,
+                modifier = Modifier.padding(vertical = 3.dp)
+            )
+        }
+    }
+}
 
-        // Passive preview: no onLineClick, so lines never seek playback.
-        SyncedLyricsList(
-            lines = syncedLyrics,
-            currentIndex = uiState.currentIndex,
+@Composable
+private fun ToggleIcon(
+    imageVector: ImageVector,
+    active: Boolean,
+    enabled: Boolean,
+    contentDescription: String,
+    onClick: () -> Unit
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        SpIconButton(
+            imageVector = imageVector,
+            contentDescription = contentDescription,
+            onClick = onClick,
+            enabled = enabled,
+            tint = if (active) Sp.Green else Sp.Text,
+            iconSize = 26.dp
+        )
+        val dot by animateFloatAsState(if (active) 1f else 0f, spring(dampingRatio = 0.5f), label = "dot")
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
+                .offset(y = (-6).dp)
+                .size(4.dp)
+                .graphicsLayer { scaleX = dot; scaleY = dot; alpha = dot }
+                .clip(CircleShape)
+                .background(Sp.Green)
         )
     }
 }
