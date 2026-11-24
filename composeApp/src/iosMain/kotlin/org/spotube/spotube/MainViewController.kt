@@ -37,7 +37,14 @@ import org.koin.core.component.inject
 fun MainViewController() = ComposeUIViewController(configure = {
     initKoin()
     SafariUserAgent.prime()
-}) { InitNewPipe { App() } }
+}) {
+    val demo = uiDemoMode()
+    if (demo != null) org.spotube.spotube.core.ui.spotify.UiDemo.expandPlayer = "player" in demo
+    InitNewPipe {
+        App()
+        if (demo != null) UiDemoDriver(demo)
+    }
+}
 
 @Composable
 fun InitNewPipe(

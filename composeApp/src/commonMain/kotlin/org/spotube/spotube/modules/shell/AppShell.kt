@@ -339,7 +339,7 @@ internal fun CompactPlayerOverlay(
     // the measured chrome height changes, rather than keeping a stale peek anchor.
     val sheetState = key(peekHeight) {
         rememberBottomSheetState(
-            initialDetent = partialDetent,
+            initialDetent = if (org.spotube.spotube.core.ui.spotify.UiDemo.expandPlayer) SheetDetent.FullyExpanded else partialDetent,
             detents = listOf(partialDetent, SheetDetent.FullyExpanded),
             // A spring carries the fling velocity into the settle, so releasing mid-drag
             // glides to the nearest detent instead of stalling and then easing like a tween.
