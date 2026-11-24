@@ -57,7 +57,7 @@ internal fun PlayerArtistsText(
                     LinkAnnotation.Clickable(
                         tag = artistId,
                         styles = TextLinkStyles(
-                            style = SpanStyle(textDecoration = TextDecoration.Underline),
+                            style = SpanStyle(),
                             hoveredStyle = SpanStyle(
                                 color = hoverColor,
                                 textDecoration = TextDecoration.Underline),

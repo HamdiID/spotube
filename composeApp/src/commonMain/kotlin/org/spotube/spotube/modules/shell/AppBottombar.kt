@@ -70,8 +70,8 @@ fun AppBottombar(
             .background(
                 Brush.verticalGradient(
                     0f to Color.Black.copy(alpha = 0f),
-                    0.35f to Color.Black.copy(alpha = 0.82f),
-                    1f to Color.Black.copy(alpha = 0.98f)
+                    0.3f to Color.Black.copy(alpha = 0.9f),
+                    1f to Color.Black
                 )
             )
             .windowInsetsPadding(WindowInsets.navigationBars)
