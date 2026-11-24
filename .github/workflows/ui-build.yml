@@ -18,13 +18,21 @@ env:
 
 jobs:
   ios:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 150
     strategy:
       fail-fast: false
       matrix:
-        kind: [device, simulator]
+        include:
+          # arm64 macOS runners are often out of capacity; the device build cross-compiles fine on Intel.
+          - kind: device
+            runner: macos-15-intel
+          - kind: simulator
+            runner: macos-latest
     steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
       - uses: actions/checkout@v7
       - uses: actions/checkout@v7
         with:

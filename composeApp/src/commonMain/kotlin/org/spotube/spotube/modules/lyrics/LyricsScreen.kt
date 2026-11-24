@@ -85,14 +85,17 @@ fun LyricsScreen(
     onClose: (() -> Unit)? = null) {
     val uiState by viewModel.uiState.collectAsState()
     val colors = MillenniumTheme.colors
+    // Spotify paints the whole lyrics page in the artwork colour.
+    val lyricsTint by org.spotube.spotube.core.ui.spotify.rememberArtworkColor(uiState.coverUrl.ifBlank { null })
 
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
+            .background(colors.background)
             .background(
                 Brush.verticalGradient(
-                    0f to colors.accent.copy(alpha = 0.14f),
-                    0.55f to colors.background,
+                    0f to lyricsTint,
+                    0.7f to lyricsTint.copy(alpha = 0.85f),
                     1f to colors.background
                 )
             )

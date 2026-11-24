@@ -150,7 +150,7 @@ private fun ImmersiveLyricLine(
     }
     val alpha by animateFloatAsState(targetAlpha, tween(300))
     val scale by animateFloatAsState(if (isCurrent) 1f else 0.9f, tween(300))
-    val color by animateColorAsState(if (isCurrent) colors.accent else colors.text, tween(300))
+    val color by animateColorAsState(colors.text, tween(300))
     val hoverBackground by animateColorAsState(
         if (hovered && !isCurrent) colors.accent.copy(alpha = 0.10f) else Color.Transparent
     )
