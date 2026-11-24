@@ -934,4 +934,6 @@
     <string name="home_greeting_afternoon">Bon après-midi</string>
     <string name="home_greeting_evening">Bonsoir</string>
     <string name="home_filter_all">Tout</string>
+    <string name="nav_create">Créer</string>
+    <string name="home_profile_content_description">Profil et réglages</string>
 </resources>

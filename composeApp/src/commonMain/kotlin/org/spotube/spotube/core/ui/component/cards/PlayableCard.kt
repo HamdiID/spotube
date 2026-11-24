@@ -102,7 +102,7 @@ fun PlayableCard(
     val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
 
     MediaCardSurface(
-        modifier = modifier.width(150.dp),
+        modifier = modifier.width(146.dp),
         onClick = onClick ?: onPlay,
         interactive = onClick != null || onPlay != null || onAddToQueue != null
     ) { highlighted ->
@@ -189,8 +189,8 @@ fun PlayableCard(
                 TextWithShimmer(
                     text = title,
                     style = androidx.compose.ui.text.TextStyle(
-                        fontSize = 13.sp,
-                        lineHeight = 17.sp,
+                        fontSize = 14.sp,
+                        lineHeight = 18.sp,
                         fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
                     ),
                     color = if (isPlaying) org.spotube.spotube.core.ui.spotify.Sp.Green else org.spotube.spotube.core.ui.spotify.Sp.Text,
@@ -202,8 +202,8 @@ fun PlayableCard(
                     TextWithShimmer(
                         text = subtitle,
                         style = androidx.compose.ui.text.TextStyle(
-                            fontSize = 12.sp,
-                            lineHeight = 16.sp
+                            fontSize = 14.sp,
+                            lineHeight = 18.sp
                         ),
                         color = org.spotube.spotube.core.ui.spotify.Sp.SubText,
                         maxLines = 2,

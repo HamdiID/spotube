@@ -314,7 +314,7 @@ fun AppExpandedPlayer(
 
     val artworkTint by rememberArtworkColor(coverModel)
     val artScale by animateFloatAsState(
-        targetValue = if (playerUiState.isPlaying) 1f else 0.88f,
+        targetValue = 1f,
         animationSpec = spring(dampingRatio = 0.55f, stiffness = Spring.StiffnessLow),
         label = "artScale"
     )
@@ -326,9 +326,9 @@ fun AppExpandedPlayer(
             .background(Sp.Base)
             .background(
                 Brush.verticalGradient(
-                    0f to artworkTint,
-                    0.5f to artworkTint.darken(0.55f),
-                    1f to Sp.Base
+                    0f to artworkTint.darken(0.1f),
+                    0.6f to artworkTint.darken(0.4f),
+                    1f to artworkTint.darken(0.65f)
                 )
             )
     ) {
@@ -523,14 +523,8 @@ fun AppExpandedPlayer(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = stringResource(Res.string.player_playing_from).uppercase(),
-                        style = TextStyle(fontSize = 10.sp, lineHeight = 12.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp),
-                        color = Color.White.copy(alpha = 0.75f),
-                        maxLines = 1
-                    )
-                    Text(
                         text = playerUiState.album.ifBlank { stringResource(Res.string.player_now_playing) },
-                        style = TextStyle(fontSize = 13.sp, lineHeight = 17.sp, fontWeight = FontWeight.Bold),
+                        style = TextStyle(fontSize = 15.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold),
                         color = Sp.Text,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -608,7 +602,7 @@ fun AppExpandedPlayer(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = playerUiState.title,
-                        style = TextStyle(fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.Bold),
+                        style = TextStyle(fontSize = 24.sp, lineHeight = 30.sp, fontWeight = FontWeight.Bold),
                         color = Sp.Text,
                         maxLines = 1,
                         modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE, initialDelayMillis = 2000)
@@ -620,7 +614,7 @@ fun AppExpandedPlayer(
                             // The page opens beneath the player, so get out of the way
                             onCollapse()
                         },
-                        style = TextStyle(fontSize = 16.sp, lineHeight = 22.sp, fontWeight = FontWeight.Normal),
+                        style = TextStyle(fontSize = 17.sp, lineHeight = 22.sp, fontWeight = FontWeight.Normal),
                         color = Color.White.copy(alpha = 0.7f)
                     )
                 }
@@ -656,12 +650,13 @@ fun AppExpandedPlayer(
                 } else playerUiState.position
                 Text(
                     text = formatPlayerTime(shownPosition),
-                    style = TextStyle(fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.Medium),
+                    style = TextStyle(fontSize = 12.sp, lineHeight = 15.sp, fontWeight = FontWeight.Medium),
                     color = Color.White.copy(alpha = 0.7f)
                 )
+                val remaining = (playerUiState.displayDuration - shownPosition).coerceAtLeast(kotlin.time.Duration.ZERO)
                 Text(
-                    text = formatPlayerTime(playerUiState.displayDuration),
-                    style = TextStyle(fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.Medium),
+                    text = "-" + formatPlayerTime(remaining),
+                    style = TextStyle(fontSize = 12.sp, lineHeight = 15.sp, fontWeight = FontWeight.Medium),
                     color = Color.White.copy(alpha = 0.7f)
                 )
             }

@@ -28,6 +28,10 @@ import androidx.compose.foundation.background
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import spotube.composeapp.generated.resources.home_profile_content_description
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -157,7 +161,15 @@ fun HomeScreen(viewModel: HomeScreenViewModel) {
             .fillMaxSize()
             .background(MillenniumTheme.colors.background)
     ) {
-        ApplicationMainBar(
+        if (isSmallScreen) {
+            val genresState = state as? HomeScreenState.Data
+            HomeTopRow(
+                genres = genresState?.genres ?: emptyList(),
+                selectedGenreId = genresState?.selectedGenreId,
+                onGenreSelected = { viewModel.selectGenre(it) },
+                onProfileClick = { navigationCommands.navigateTo(Routes.Settings) }
+            )
+        } else ApplicationMainBar(
             backButton = false,
             title = {
                 if (isSmallScreen) {
@@ -304,7 +316,7 @@ private fun HomeContent(
             }
 
             is HomeScreenState.Data -> {
-                if (state.genres.isNotEmpty()) {
+                if (!compact && state.genres.isNotEmpty()) {
                     item {
                         GenreTabs(
                             genres = state.genres,
@@ -421,7 +433,7 @@ private fun HomeSection(
             )
             Text(
                 text = title,
-                style = TextStyle(fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.Bold),
+                style = TextStyle(fontSize = 24.sp, lineHeight = 30.sp, fontWeight = FontWeight.Bold),
                 color = Sp.Text,
                 maxLines = 2
             )
@@ -526,9 +538,9 @@ private fun QuickAccessGrid(items: List<MetadataBrowseItem>) {
                     Row(
                         modifier = Modifier
                             .weight(1f)
-                            .height(56.dp)
+                            .height(48.dp)
                             .clip(RoundedCornerShape(4.dp))
-                            .background(Color.White.copy(alpha = 0.08f))
+                            .background(Color.White.copy(alpha = 0.1f))
                             .bouncyClick(pressedScale = 0.96f) { navigationCommands.navigateTo(tile.route) },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -537,13 +549,13 @@ private fun QuickAccessGrid(items: List<MetadataBrowseItem>) {
                             contentDescription = tile.title,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(56.dp)
-                                .then(if (tile.round) Modifier.padding(6.dp).clip(CircleShape) else Modifier)
+                                .size(48.dp)
+                                .then(if (tile.round) Modifier.padding(4.dp).clip(CircleShape) else Modifier)
                                 .background(Sp.Highlight)
                         )
                         Text(
                             text = tile.title,
-                            style = TextStyle(fontSize = 12.sp, lineHeight = 15.sp, fontWeight = FontWeight.Bold),
+                            style = TextStyle(fontSize = 13.sp, lineHeight = 16.sp, fontWeight = FontWeight.Bold),
                             color = Sp.Text,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
@@ -552,6 +564,56 @@ private fun QuickAccessGrid(items: List<MetadataBrowseItem>) {
                     }
                 }
                 if (row.size == 1) Spacer(Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+
+/** Spotify's top row on Home: round profile button (opens settings) followed by filter chips. */
+@Composable
+private fun HomeTopRow(
+    genres: List<MetadataBrowseGenre>,
+    selectedGenreId: String?,
+    onGenreSelected: (String) -> Unit,
+    onProfileClick: () -> Unit
+) {
+    val rowState = rememberLazyListState()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .padding(top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 8.dp)
+                .size(34.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFE3A6C9))
+                .bouncyClick(pressedScale = 0.9f, onClick = onProfileClick),
+            contentAlignment = Alignment.Center
+        ) {
+            org.spotube.spotube.core.ui.spotify.SpIcon(
+                imageVector = SpIcons.Person,
+                contentDescription = stringResource(Res.string.home_profile_content_description),
+                tint = Sp.Black,
+                size = 20.dp
+            )
+        }
+        LazyRow(
+            state = rowState,
+            modifier = Modifier.weight(1f).dragScrollable(rowState),
+            contentPadding = PaddingValues(end = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(genres) { genre ->
+                org.spotube.spotube.core.ui.spotify.SpChip(
+                    text = genre.name,
+                    selected = selectedGenreId == genre.id,
+                    onClick = { onGenreSelected(genre.id) }
+                )
             }
         }
     }

@@ -231,6 +231,18 @@ object SpIcons {
             "M17,2H7c-1.1,0 -1.99,0.9 -1.99,2L5,20c0,1.1 0.9,2 2,2h10c1.1,0 2,-0.9 2,-2V4c0,-1.1 -0.9,-2 -2,-2zM12,4c1.1,0 2,0.9 2,2s-0.9,2 -2,2c-1.11,0 -2,-0.9 -2,-2s0.89,-2 2,-2zM12,20c-2.76,0 -5,-2.24 -5,-5s2.24,-5 5,-5 5,2.24 5,5 -2.24,5 -5,5zM12,12c-1.66,0 -3,1.34 -3,3s1.34,3 3,3 3,-1.34 3,-3 -1.34,-3 -3,-3z"
         )
     }
+    val Plus by lazy {
+        icon("plus", "M12.9,11.1V3.5h-1.8v7.6H3.5v1.8h7.6v7.6h1.8v-7.6h7.6v-1.8z")
+    }
+    val Person by lazy {
+        icon(
+            "person",
+            "M12,12c2.21,0 4,-1.79 4,-4s-1.79,-4 -4,-4 -4,1.79 -4,4 1.79,4 4,4zM12,14c-2.67,0 -8,1.34 -8,4v2h16v-2c0,-2.66 -5.33,-4 -8,-4z"
+        )
+    }
+    val Share by lazy {
+        icon("share", "M16,5l-1.42,1.42 -1.59,-1.59V16h-1.98V4.83L9.42,6.42 8,5l4,-4 4,4zM20,10v11c0,1.1 -0.9,2 -2,2H6c-1.11,0 -2,-0.9 -2,-2V10c0,-1.11 0.89,-2 2,-2h3v2H6v11h12V10h-3V8h3c1.1,0 2,0.89 2,2z")
+    }
     val ArrowDown by lazy {
         icon("arrow_down", "M10.5,3h3v11.2l4.4,-4.4 2.1,2.1L12,19.9 4,11.9l2.1,-2.1 4.4,4.4z")
     }
@@ -359,7 +371,7 @@ fun SpSeekBar(
     var dragging by remember { mutableStateOf(false) }
     val onChange by rememberUpdatedState(onValueChange)
     val onFinished by rememberUpdatedState(onValueChangeFinished)
-    val thumb by animateFloatAsState(if (dragging) 1f else 0.72f, tween(140), label = "thumb")
+    val thumb by animateFloatAsState(if (dragging) 1f else 0f, tween(140), label = "thumb")
     val activeTint by animateColorAsState(if (dragging) Sp.Green else activeColor, tween(140), label = "active")
     Canvas(
         modifier = modifier
@@ -546,20 +558,22 @@ fun SpChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bg by animateColorAsState(if (selected) Sp.Green else Sp.Highlight, tween(200), label = "chip")
+    val bg by animateColorAsState(if (selected) Sp.Green else Color.White.copy(alpha = 0.07f), tween(200), label = "chip")
     val fg by animateColorAsState(if (selected) Sp.Black else Sp.Text, tween(200), label = "chipText")
+    val edge by animateColorAsState(if (selected) Sp.Green else Color.White.copy(alpha = 0.14f), tween(200), label = "chipEdge")
     Box(
         modifier = modifier
-            .height(32.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .height(33.dp)
+            .clip(RoundedCornerShape(17.dp))
             .background(bg)
+            .border(0.8.dp, edge, RoundedCornerShape(17.dp))
             .bouncyClick(pressedScale = 0.92f, onClick = onClick)
-            .padding(horizontal = 14.dp),
+            .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         com.composeunstyled.Text(
             text = text,
-            style = TextStyle(fontSize = 13.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold),
+            style = TextStyle(fontSize = 14.sp, lineHeight = 18.sp, fontWeight = FontWeight.Normal),
             color = fg,
             maxLines = 1
         )

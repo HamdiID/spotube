@@ -147,8 +147,7 @@ val sidebarTabs = tabs + listOf(
     )
 )
 val bottombarTabs = tabs + listOf(
-    NavigationItem.Tab<Any>(Res.string.library_toolbar_compact_title, Iconsax.IconsaxMusicLibrary, Routes.Library),
-    NavigationItem.Tab(Res.string.settings_screen_title, Iconsax.IconsaxSetting2, Routes.Settings)
+    NavigationItem.Tab<Any>(Res.string.library_toolbar_compact_title, Iconsax.IconsaxMusicLibrary, Routes.Library)
 )
 
 @OptIn(KoinExperimentalAPI::class)

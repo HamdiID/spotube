@@ -61,6 +61,10 @@ import org.spotube.spotube.core.ui.spotify.SpIcon
 import org.spotube.spotube.core.ui.spotify.SpIcons
 import org.spotube.spotube.core.ui.spotify.bouncyClick
 import org.spotube.spotube.modules.downloads.DownloadBadgeIndicator
+import org.spotube.spotube.modules.library.LibraryState
+import org.koin.compose.koinInject
+import spotube.composeapp.generated.resources.Res
+import spotube.composeapp.generated.resources.nav_create
 
 @Composable
 fun AppBottombar(
@@ -69,25 +73,23 @@ fun AppBottombar(
     modifier: Modifier = Modifier,
     libraryBadge: @Composable () -> Unit = { DownloadBadgeIndicator() }
 ) {
+    val libraryState: LibraryState = koinInject()
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(
                 Brush.verticalGradient(
                     0f to Color.Black.copy(alpha = 0f),
-                    0.5f to Color.Black.copy(alpha = 0.55f),
-                    1f to Color.Black.copy(alpha = 0.85f)
+                    0.32f to Color.Black.copy(alpha = 0.88f),
+                    1f to Color.Black
                 )
             )
             .windowInsetsPadding(WindowInsets.navigationBars)
     ) {
-        // Floating "liquid glass" capsule, like Spotify on iOS 26.
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 14.dp, end = 14.dp, top = 10.dp, bottom = 6.dp)
-                .liquidGlass(RoundedCornerShape(30.dp))
-                .padding(horizontal = 6.dp, vertical = 5.dp),
+                .padding(top = 16.dp, bottom = 4.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -102,6 +104,17 @@ fun AppBottombar(
                     onClick = { navigator.navigate(tab.route) }
                 )
             }
+            SpotifyTab(
+                title = stringResource(Res.string.nav_create),
+                icon = SpIcons.Plus,
+                selected = false,
+                modifier = Modifier.weight(1f),
+                badge = null,
+                onClick = {
+                    navigator.navigate(Routes.Library)
+                    libraryState.showCreatePlaylist()
+                }
+            )
         }
     }
 }
@@ -129,33 +142,26 @@ private fun SpotifyTab(
         label = "tab"
     )
     val tint = if (selected) Sp.Text else Sp.SubText
-    val pill by animateColorAsState(
-        if (selected) Color.White.copy(alpha = 0.13f) else Color.Transparent,
-        tween(220),
-        label = "pill"
-    )
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(24.dp))
-            .background(pill)
             .bouncyClick(pressedScale = 0.86f, onClick = onClick)
-            .padding(vertical = 5.dp),
+            .padding(vertical = 2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier.graphicsLayer { scaleX = pop; scaleY = pop },
             contentAlignment = Alignment.TopEnd
         ) {
-            SpIcon(icon, contentDescription = title, tint = tint, size = 26.dp)
+            SpIcon(icon, contentDescription = title, tint = tint, size = 28.dp)
             if (badge != null) Box(Modifier.padding(start = 18.dp)) { badge() }
         }
         Spacer(Modifier.height(2.dp))
         Text(
             text = title,
             style = TextStyle(
-                fontSize = 10.sp,
-                lineHeight = 12.sp,
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
+                fontSize = 11.sp,
+                lineHeight = 13.sp,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
             ),
             color = tint,
             maxLines = 1

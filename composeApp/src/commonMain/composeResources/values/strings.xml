@@ -1136,4 +1136,6 @@
     <string name="home_greeting_afternoon">Good afternoon</string>
     <string name="home_greeting_evening">Good evening</string>
     <string name="home_filter_all">All</string>
+    <string name="nav_create">Create</string>
+    <string name="home_profile_content_description">Profile and settings</string>
 </resources>

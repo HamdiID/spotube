@@ -75,6 +75,9 @@ import org.spotube.spotube.modules.saved_tracks.SAVED_TRACKS_COLLECTION_ID
 import org.spotube.spotube.modules.saved_tracks.SavedTracksViewModel
 import spotube.composeapp.generated.resources.Res
 import spotube.composeapp.generated.resources.player_nothing_playing
+import spotube.composeapp.generated.resources.devices_title
+import org.spotube.spotube.core.navigation.NavigationCommands
+import org.spotube.spotube.core.navigation.Routes
 import spotube.composeapp.generated.resources.player_pause_content_description
 import spotube.composeapp.generated.resources.player_play_content_description
 
@@ -97,6 +100,7 @@ fun AppFloatingPlayer(
 ) {
     val playerUiState = rememberPlayerUiState(audioPlayer, audioPlayerQueue)
     val scope = rememberCoroutineScope()
+    val navigationCommands: NavigationCommands = koinInject()
     val albumArtModifier =
         rememberSharedAlbumArtModifier(sharedTransitionScope, animatedVisibilityScope)
 
@@ -117,6 +121,7 @@ fun AppFloatingPlayer(
         onPlayPause = ::onPlayPause,
         onSkipNext = { scope.launch { runCatching { audioPlayer.skipToNext() } } },
         onSkipPrevious = { scope.launch { runCatching { audioPlayer.skipToPrevious() } } },
+        onDevices = { navigationCommands.navigateTo(Routes.Devices) },
         heartButton = {
             PlayerHeartButton(
                 audioPlayerQueue = audioPlayerQueue,
@@ -134,6 +139,7 @@ internal fun FloatingPlayerContent(
     onPlayPause: () -> Unit,
     onSkipNext: () -> Unit = {},
     onSkipPrevious: () -> Unit = {},
+    onDevices: () -> Unit = {},
     heartButton: @Composable () -> Unit
 ) {
     val coverModel = playerUiState.coverModel
@@ -152,10 +158,10 @@ internal fun FloatingPlayerContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(FloatingPlayerContentHeight)
-                .padding(start = 14.dp, end = 14.dp, top = 4.dp, bottom = 4.dp)
+                .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp)
                 .liquidGlass(
-                    shape = RoundedCornerShape(16.dp),
-                    tint = tint.darken(0.25f).copy(alpha = 0.8f)
+                    shape = RoundedCornerShape(12.dp),
+                    tint = tint.darken(0.35f).copy(alpha = 0.82f)
                 )
                 .pointerInput(hasQueue) {
                     if (!hasQueue) return@pointerInput
@@ -181,7 +187,7 @@ internal fun FloatingPlayerContent(
                 .drawBehind {
                     // Progress line along the bottom edge of the card, like Spotify.
                     val h = 2.dp.toPx()
-                    val inset = 16.dp.toPx()
+                    val inset = 10.dp.toPx()
                     val y = size.height - h
                     val w = size.width - inset * 2
                     drawRect(Color.White.copy(alpha = 0.22f), Offset(inset, y), Size(w, h))
@@ -206,7 +212,7 @@ internal fun FloatingPlayerContent(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(42.dp)
+                            .size(40.dp)
                             .then(albumArtModifier)
                             .clip(RoundedCornerShape(4.dp))
                             .background(Color.Black.copy(alpha = 0.25f)),
@@ -240,6 +246,13 @@ internal fun FloatingPlayerContent(
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    SpIconButton(
+                        imageVector = SpIcons.Devices,
+                        contentDescription = stringResource(Res.string.devices_title),
+                        onClick = onDevices,
+                        tint = Sp.Text,
+                        iconSize = 22.dp
+                    )
                     if (hasQueue) heartButton()
                     SpIconButton(
                         imageVector = if (playerUiState.isPlaying) SpIcons.Pause else SpIcons.Play,
