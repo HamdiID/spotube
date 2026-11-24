@@ -20,6 +20,8 @@ jobs:
   ios:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 150
+    env:
+      SKIP: ${{ matrix.kind == 'device' && !contains(github.event.head_commit.message, '[ipa]') }}
     strategy:
       fail-fast: false
       matrix:
@@ -31,37 +33,48 @@ jobs:
             runner: macos-latest
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
+        if: env.SKIP != 'true'
         with:
           xcode-version: latest-stable
       - uses: actions/checkout@v7
+        if: env.SKIP != 'true'
       - uses: actions/checkout@v7
+        if: env.SKIP != 'true'
         with:
           repository: ${{ env.COMPOSE_WEBVIEW_REPO }}
           ref: ${{ env.COMPOSE_WEBVIEW_COMMIT }}
           path: compose-webview
       - uses: actions/setup-java@v6
+        if: env.SKIP != 'true'
         with:
           distribution: temurin
           java-version: 21
       - uses: android-actions/setup-android@v4
+        if: env.SKIP != 'true'
       # Rust 1.100 changed cargo's build-script output layout, which this Gobley version can't read yet.
       - uses: dtolnay/rust-toolchain@master
+        if: env.SKIP != 'true'
         with:
           toolchain: 1.99.1
       - uses: gradle/actions/setup-gradle@v6
+        if: env.SKIP != 'true'
       - name: Publish compose-webview
+        if: env.SKIP != 'true'
         working-directory: compose-webview
         run: |
           chmod +x gradlew && ./gradlew publishToMavenLocal > ../webview.log 2>&1 || { tail -60 ../webview.log; cp ../webview.log ../build.log; exit 1; }
       - run: chmod +x gradlew
+        if: env.SKIP != 'true'
       - uses: actions/cache@v6
+        if: env.SKIP != 'true'
         with:
           path: iosApp/Pods
           key: pods-${{ runner.os }}-${{ hashFiles('iosApp/Podfile.lock') }}
       - run: pod install --project-directory=iosApp
+        if: env.SKIP != 'true'
 
       - name: Build device app
-        if: matrix.kind == 'device'
+        if: env.SKIP != 'true' && (matrix.kind == 'device')
         env:
           ORG_GRADLE_PROJECT_nightly: false
           ORG_GRADLE_PROJECT_buildNumber: ${{ github.run_number }}
@@ -79,7 +92,7 @@ jobs:
           ls -la Spotube-ios.ipa
 
       - name: Build simulator app
-        if: matrix.kind == 'simulator'
+        if: env.SKIP != 'true' && (matrix.kind == 'simulator')
         env:
           ORG_GRADLE_PROJECT_nightly: false
         run: |
@@ -93,7 +106,7 @@ jobs:
           [ $code -eq 0 ] || exit $code
 
       - name: Screenshots
-        if: matrix.kind == 'simulator'
+        if: env.SKIP != 'true' && (matrix.kind == 'simulator')
         run: |
           mkdir -p shots
           APP=$(find build/sim/Build/Products/Debug-iphonesimulator -maxdepth 1 -name "*.app" -type d | head -1)
@@ -108,7 +121,7 @@ jobs:
           xcrun simctl spawn "$DEV" log show --last 3m --predicate "process == \"$(basename "$APP" .app)\"" --style compact 2>/dev/null | tail -300 > shots/app.log || true
 
       - name: Publish output
-        if: always()
+        if: env.SKIP != 'true' && (always())
         run: |
           OUT=$RUNNER_TEMP/out; mkdir -p $OUT/${{ matrix.kind }}
           [ -f build.log ] && grep -E "^e: |^w: .*deprecated|error:|BUILD (SUCCEEDED|FAILED)" build.log | grep -v "^w:" | head -200 > $OUT/${{ matrix.kind }}/errors.txt || true
@@ -123,7 +136,7 @@ jobs:
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ci-${{ matrix.kind }}
 
       - name: Release IPA
-        if: matrix.kind == 'device' && success()
+        if: env.SKIP != 'true' && (matrix.kind == 'device' && success())
         uses: softprops/action-gh-release@v2
         with:
           tag_name: spotify-ui
