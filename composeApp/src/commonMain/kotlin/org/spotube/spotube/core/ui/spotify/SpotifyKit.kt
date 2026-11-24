@@ -7,6 +7,15 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Shape
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.blur.HazeColorEffect
+import dev.chrisbanes.haze.blur.blurEffect
+import dev.chrisbanes.haze.hazeEffect
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -555,4 +564,52 @@ fun SpChip(
             maxLines = 1
         )
     }
+}
+
+
+/** Blur source behind the floating glass chrome (tab bar + mini player) on phones. */
+val LocalGlassHaze = staticCompositionLocalOf<HazeState?> { null }
+
+/**
+ * iOS 26-style "liquid glass": blurs what scrolls behind, tints it, and adds a light rim and a
+ * soft top sheen. Falls back to a translucent fill when no blur source is available.
+ */
+@Composable
+fun Modifier.liquidGlass(
+    shape: Shape,
+    tint: Color = Color.Black.copy(alpha = 0.45f),
+    blur: Dp = 24.dp,
+    shadow: Boolean = true
+): Modifier {
+    val haze = LocalGlassHaze.current
+    var m = this
+    if (shadow) m = m.shadow(16.dp, shape, ambientColor = Color.Black.copy(alpha = 0.6f), spotColor = Color.Black.copy(alpha = 0.6f))
+    m = m.clip(shape)
+    m = if (haze != null) {
+        m.hazeEffect(state = haze) {
+            blurEffect {
+                blurRadius = blur
+                colorEffects = listOf(HazeColorEffect.tint(tint))
+            }
+        }
+    } else {
+        m.background(tint.copy(alpha = (tint.alpha + 0.4f).coerceAtMost(0.95f)))
+    }
+    return m
+        .background(
+            Brush.verticalGradient(
+                0f to Color.White.copy(alpha = 0.10f),
+                0.45f to Color.White.copy(alpha = 0.02f),
+                1f to Color.Transparent
+            )
+        )
+        .border(
+            width = 0.8.dp,
+            brush = Brush.verticalGradient(
+                0f to Color.White.copy(alpha = 0.32f),
+                0.5f to Color.White.copy(alpha = 0.08f),
+                1f to Color.White.copy(alpha = 0.16f)
+            ),
+            shape = shape
+        )
 }

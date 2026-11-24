@@ -17,6 +17,8 @@
 
 package org.spotube.spotube.core.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.navigation3.runtime.NavKey
 import org.spotube.spotube.modules.album.AlbumScreen
 import org.spotube.spotube.modules.artist.ArtistScreen
@@ -107,105 +109,150 @@ sealed interface Routes : NavKey {
 val navigationModule = module {
     singleOf(::NavigationCommands)
     navigation<Routes.Home> {
-        MetadataPluginGuard {
-            HomeScreen(viewModel = koinViewModel())
+        OpaquePage {
+            MetadataPluginGuard {
+                HomeScreen(viewModel = koinViewModel())
+            }
         }
     }
     navigation<Routes.Search> {
-        MetadataPluginGuard {
-            SearchScreen()
+        OpaquePage {
+            MetadataPluginGuard {
+                SearchScreen()
+            }
         }
     }
     navigation<Routes.Library> {
-        // Not guarded as a whole: Local tracks and Downloads work without a plugin.
-        LibraryScreen()
+        OpaquePage {
+            // Not guarded as a whole: Local tracks and Downloads work without a plugin.
+            LibraryScreen()
+        }
     }
     navigation<Routes.LocalFolder> {
-        LocalFolderScreen(
-            viewModel = koinViewModel(
-                key = it.folderPath,
-                parameters = { parametersOf(it.folderPath) }
-            ),
-            onBack = { get<NavigationCommands>().pop() })
+        OpaquePage {
+            LocalFolderScreen(
+                viewModel = koinViewModel(
+                    key = it.folderPath,
+                    parameters = { parametersOf(it.folderPath) }
+                ),
+                onBack = { get<NavigationCommands>().pop() })
+        }
     }
     navigation<Routes.Settings> {
-        SettingsScreen(settingsViewModel = koinViewModel())
+        OpaquePage {
+            SettingsScreen(settingsViewModel = koinViewModel())
+        }
     }
     navigation<Routes.Plugins> {
-        PluginScreen(viewModel = koinViewModel())
+        OpaquePage {
+            PluginScreen(viewModel = koinViewModel())
+        }
     }
     navigation<Routes.WebView> {}
     navigation<Routes.Playlist> {
-        MetadataPluginGuard(backButton = true) {
-            PlaylistScreen(
-                playlistId = it.playlistId,
-                viewModel = koinViewModel(
-                    key = it.playlistId,
-                    parameters = { parametersOf(it.playlistId) }
-                ),
-                audioPlayerQueue = get(),
-                audioPlayer = get(),
-                navigationCommands = get())
+        OpaquePage {
+            MetadataPluginGuard(backButton = true) {
+                PlaylistScreen(
+                    playlistId = it.playlistId,
+                    viewModel = koinViewModel(
+                        key = it.playlistId,
+                        parameters = { parametersOf(it.playlistId) }
+                    ),
+                    audioPlayerQueue = get(),
+                    audioPlayer = get(),
+                    navigationCommands = get())
+            }
         }
     }
     navigation<Routes.Artist> {
-        MetadataPluginGuard(backButton = true) {
-            ArtistScreen(
-                viewModel = koinViewModel(
-                    key = it.artistId,
-                    parameters = { parametersOf(it.artistId) }
-                ),
-                audioPlayerQueue = get(),
-                audioPlayer = get(),
-                navigationCommands = get())
+        OpaquePage {
+            MetadataPluginGuard(backButton = true) {
+                ArtistScreen(
+                    viewModel = koinViewModel(
+                        key = it.artistId,
+                        parameters = { parametersOf(it.artistId) }
+                    ),
+                    audioPlayerQueue = get(),
+                    audioPlayer = get(),
+                    navigationCommands = get())
+            }
         }
     }
     navigation<Routes.Album> {
-        MetadataPluginGuard(backButton = true) {
-            AlbumScreen(
-                albumId = it.albumId,
-                viewModel = koinViewModel(
-                    key = it.albumId,
-                    parameters = { parametersOf(it.albumId) }
-                ),
-                audioPlayerQueue = get(),
-                audioPlayer = get(),
-                navigationCommands = get())
+        OpaquePage {
+            MetadataPluginGuard(backButton = true) {
+                AlbumScreen(
+                    albumId = it.albumId,
+                    viewModel = koinViewModel(
+                        key = it.albumId,
+                        parameters = { parametersOf(it.albumId) }
+                    ),
+                    audioPlayerQueue = get(),
+                    audioPlayer = get(),
+                    navigationCommands = get())
+            }
         }
     }
     navigation<Routes.Lyrics> {
-        LyricsScreen(viewModel = koinViewModel())
+        OpaquePage {
+            LyricsScreen(viewModel = koinViewModel())
+        }
     }
     navigation<Routes.SavedTracks> {
-        MetadataPluginGuard(backButton = true) {
-            SavedTracksScreen(
-                viewModel = koinViewModel(
-                    key = SAVED_TRACKS_COLLECTION_ID,
-                    parameters = { parametersOf(SAVED_TRACKS_COLLECTION_ID) }
-                ),
-                audioPlayerQueue = get(),
-                audioPlayer = get(),
-                navigationCommands = get())
+        OpaquePage {
+            MetadataPluginGuard(backButton = true) {
+                SavedTracksScreen(
+                    viewModel = koinViewModel(
+                        key = SAVED_TRACKS_COLLECTION_ID,
+                        parameters = { parametersOf(SAVED_TRACKS_COLLECTION_ID) }
+                    ),
+                    audioPlayerQueue = get(),
+                    audioPlayer = get(),
+                    navigationCommands = get())
+            }
         }
     }
     navigation<Routes.Blacklist> {
-        BlacklistScreen()
+        OpaquePage {
+            BlacklistScreen()
+        }
     }
     navigation<Routes.Devices> {
-        DevicesScreen()
+        OpaquePage {
+            DevicesScreen()
+        }
     }
     navigation<Routes.RemoteControl> {
-        RemoteControlScreen(
-            onDisconnect = { get<NavigationCommands>().pop() }
-        )
+        OpaquePage {
+            RemoteControlScreen(
+                onDisconnect = { get<NavigationCommands>().pop() }
+            )
+        }
     }
     navigation<Routes.Jam> {
-        JamScreen(navigationCommands = get())
+        OpaquePage {
+            JamScreen(navigationCommands = get())
+        }
     }
     navigation<Routes.JamSettings> {
-        JamSettingsScreen(viewModel = koinViewModel())
+        OpaquePage {
+            JamSettingsScreen(viewModel = koinViewModel())
+        }
     }
     navigation<Routes.Welcome> {
-        WelcomeScreen(viewModel = koinViewModel())
+        OpaquePage {
+            WelcomeScreen(viewModel = koinViewModel())
+        }
     }
+}
+
+
+/** Every page paints the app background, so iOS-style slide transitions never show through. */
+@androidx.compose.runtime.Composable
+private fun OpaquePage(content: @androidx.compose.runtime.Composable () -> Unit) {
+    androidx.compose.foundation.layout.Box(
+        modifier = androidx.compose.ui.Modifier
+            .fillMaxSize()
+            .background(org.spotube.spotube.core.ui.spotify.Sp.Base)
+    ) { content() }
 }

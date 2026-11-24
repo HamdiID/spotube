@@ -72,24 +72,28 @@ private fun fadeThrough(): ContentTransform {
 private fun AnimatedContentTransitionScope<Scene<NavKey>>.stackTransition(
     forward: Boolean
 ): ContentTransform {
-    if (isTabSwitch()) return fadeThrough()
+    // Spotify switches tabs instantly, with no animation.
+    if (isTabSwitch()) return ContentTransform(EnterTransition.None, ExitTransition.None)
 
-    val slide = tween<IntOffset>(TRANSITION_DURATION_MILLIS, easing = EmphasizedDecelerate)
+    // iOS-style push: the new page slides in from the right edge over the old one,
+    // which drifts a third to the left and dims slightly.
+    val duration = 380
+    val slide = tween<IntOffset>(duration, easing = IosEasing)
     val enter: EnterTransition
     val exit: ExitTransition
     if (forward) {
-        enter = slideInHorizontally(slide) { (it * SLIDE_FRACTION).toInt() } +
-            fadeIn(tween(TRANSITION_DURATION_MILLIS * 2 / 3))
-        exit = slideOutHorizontally(slide) { -(it * BEHIND_SLIDE_FRACTION).toInt() } +
-            fadeOut(tween(TRANSITION_DURATION_MILLIS / 2))
+        enter = slideInHorizontally(slide) { it }
+        exit = slideOutHorizontally(slide) { -(it * 0.3f).toInt() } +
+            fadeOut(tween(duration, easing = IosEasing), targetAlpha = 0.6f)
     } else {
-        enter = slideInHorizontally(slide) { -(it * BEHIND_SLIDE_FRACTION).toInt() } +
-            fadeIn(tween(TRANSITION_DURATION_MILLIS * 2 / 3))
-        exit = slideOutHorizontally(slide) { (it * SLIDE_FRACTION).toInt() } +
-            fadeOut(tween(TRANSITION_DURATION_MILLIS * 2 / 3))
+        enter = slideInHorizontally(slide) { -(it * 0.3f).toInt() } +
+            fadeIn(tween(duration, easing = IosEasing), initialAlpha = 0.6f)
+        exit = slideOutHorizontally(slide) { it }
     }
     return ContentTransform(enter, exit, targetContentZIndex = if (forward) 0f else -1f)
 }
+
+private val IosEasing = CubicBezierEasing(0.2f, 0.9f, 0.25f, 1f)
 
 val navPushTransitionSpec: AnimatedContentTransitionScope<Scene<NavKey>>.() -> ContentTransform =
     { stackTransition(forward = true) }

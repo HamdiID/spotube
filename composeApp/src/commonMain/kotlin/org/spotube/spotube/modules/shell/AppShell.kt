@@ -374,8 +374,12 @@ internal fun CompactPlayerOverlay(
     var expandedPlayerComposed by remember { mutableStateOf(false) }
     if (expandedPlayerVisible) expandedPlayerComposed = true
 
+    val glassHaze = rememberHazeState()
+    CompositionLocalProvider(org.spotube.spotube.core.ui.spotify.LocalGlassHaze provides glassHaze) {
     Box(modifier = Modifier.fillMaxSize()) {
-        content()
+        Box(modifier = Modifier.fillMaxSize().hazeSource(glassHaze)) {
+            content()
+        }
 
         UnstyledBottomSheet(
             state = sheetState,
@@ -424,6 +428,7 @@ internal fun CompactPlayerOverlay(
                 .graphicsLayer {
                     alpha = viewModel.floatingPlayerAlpha(progress)
                 })
+    }
     }
 }
 

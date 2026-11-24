@@ -20,7 +20,12 @@ package org.spotube.spotube.modules.shell
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import org.spotube.spotube.core.ui.spotify.liquidGlass
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,16 +75,19 @@ fun AppBottombar(
             .background(
                 Brush.verticalGradient(
                     0f to Color.Black.copy(alpha = 0f),
-                    0.3f to Color.Black.copy(alpha = 0.9f),
-                    1f to Color.Black
+                    0.5f to Color.Black.copy(alpha = 0.55f),
+                    1f to Color.Black.copy(alpha = 0.85f)
                 )
             )
             .windowInsetsPadding(WindowInsets.navigationBars)
     ) {
+        // Floating "liquid glass" capsule, like Spotify on iOS 26.
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 14.dp, bottom = 6.dp),
+                .padding(start = 14.dp, end = 14.dp, top = 10.dp, bottom = 6.dp)
+                .liquidGlass(RoundedCornerShape(30.dp))
+                .padding(horizontal = 6.dp, vertical = 5.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -121,10 +129,17 @@ private fun SpotifyTab(
         label = "tab"
     )
     val tint = if (selected) Sp.Text else Sp.SubText
+    val pill by animateColorAsState(
+        if (selected) Color.White.copy(alpha = 0.13f) else Color.Transparent,
+        tween(220),
+        label = "pill"
+    )
     Column(
         modifier = modifier
+            .clip(RoundedCornerShape(24.dp))
+            .background(pill)
             .bouncyClick(pressedScale = 0.86f, onClick = onClick)
-            .padding(vertical = 2.dp),
+            .padding(vertical = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -134,7 +149,7 @@ private fun SpotifyTab(
             SpIcon(icon, contentDescription = title, tint = tint, size = 26.dp)
             if (badge != null) Box(Modifier.padding(start = 18.dp)) { badge() }
         }
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(2.dp))
         Text(
             text = title,
             style = TextStyle(

@@ -69,6 +69,7 @@ import org.spotube.spotube.core.ui.spotify.SpIcon
 import org.spotube.spotube.core.ui.spotify.SpIconButton
 import org.spotube.spotube.core.ui.spotify.SpIcons
 import org.spotube.spotube.core.ui.spotify.darken
+import org.spotube.spotube.core.ui.spotify.liquidGlass
 import org.spotube.spotube.core.ui.spotify.rememberArtworkColor
 import org.spotube.spotube.modules.saved_tracks.SAVED_TRACKS_COLLECTION_ID
 import org.spotube.spotube.modules.saved_tracks.SavedTracksViewModel
@@ -151,9 +152,11 @@ internal fun FloatingPlayerContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(FloatingPlayerContentHeight)
-                .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(tint.darken(0.28f))
+                .padding(start = 14.dp, end = 14.dp, top = 4.dp, bottom = 4.dp)
+                .liquidGlass(
+                    shape = RoundedCornerShape(16.dp),
+                    tint = tint.darken(0.25f).copy(alpha = 0.8f)
+                )
                 .pointerInput(hasQueue) {
                     if (!hasQueue) return@pointerInput
                     val threshold = 72.dp.toPx()
@@ -178,7 +181,7 @@ internal fun FloatingPlayerContent(
                 .drawBehind {
                     // Progress line along the bottom edge of the card, like Spotify.
                     val h = 2.dp.toPx()
-                    val inset = 8.dp.toPx()
+                    val inset = 16.dp.toPx()
                     val y = size.height - h
                     val w = size.width - inset * 2
                     drawRect(Color.White.copy(alpha = 0.22f), Offset(inset, y), Size(w, h))

@@ -28,7 +28,16 @@ import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSNumber
 import platform.Foundation.NSOperationQueue
 import platform.MediaPlayer.MPChangePlaybackPositionCommandEvent
+import platform.MediaPlayer.MPMediaItemArtwork
 import platform.MediaPlayer.MPMediaItemPropertyAlbumTitle
+import platform.MediaPlayer.MPMediaItemPropertyArtwork
+import platform.Foundation.NSData
+import platform.Foundation.NSURL
+import platform.Foundation.NSURLSession
+import platform.Foundation.dataTaskWithURL
+import platform.UIKit.UIImage
+import platform.darwin.dispatch_async
+import platform.darwin.dispatch_get_main_queue
 import platform.MediaPlayer.MPMediaItemPropertyArtist
 import platform.MediaPlayer.MPMediaItemPropertyPlaybackDuration
 import platform.MediaPlayer.MPMediaItemPropertyTitle
@@ -46,6 +55,10 @@ internal class IosMediaSession {
     private val remoteCommandCenter = MPRemoteCommandCenter.sharedCommandCenter()
 
     private var configured = false
+    // Cover shown on the lock screen, Control Centre and the Dynamic Island.
+    private var artworkKey: String? = null
+    private var artwork: MPMediaItemArtwork? = null
+    private var lastInfo: Map<Any?, Any?>? = null
     private val notificationCenter = NSNotificationCenter.defaultCenter()
     private val notificationTokens = mutableListOf<Any>()
     private val remoteCommandTokens = mutableListOf<Pair<MPRemoteCommand, Any>>()
@@ -112,8 +125,35 @@ internal class IosMediaSession {
                 put(MPNowPlayingInfoPropertyElapsedPlaybackTime, positionSeconds)
             }
             put(MPNowPlayingInfoPropertyPlaybackRate, if (isPlaying) 1.0 else 0.0)
+            if (item.coverURL.isNotBlank() && item.coverURL == artworkKey) {
+                artwork?.let { put(MPMediaItemPropertyArtwork, it) }
+            }
         }
+        lastInfo = info
         nowPlayingInfoCenter.nowPlayingInfo = info
+        loadArtwork(item.coverURL)
+    }
+
+    private fun loadArtwork(coverUrl: String) {
+        if (coverUrl.isBlank() || coverUrl == artworkKey) return
+        artworkKey = coverUrl
+        artwork = null
+        val url = NSURL.URLWithString(coverUrl) ?: return
+        NSURLSession.sharedSession.dataTaskWithURL(url) { data, _, _ ->
+            if (data != null) {
+                dispatch_async(dispatch_get_main_queue()) { applyArtwork(coverUrl, data) }
+            }
+        }.resume()
+    }
+
+    private fun applyArtwork(coverUrl: String, data: NSData) {
+        if (coverUrl != artworkKey) return
+        val image = UIImage.imageWithData(data) ?: return
+        val art = MPMediaItemArtwork(boundsSize = image.size, requestHandler = { _ -> image })
+        artwork = art
+        lastInfo?.let { info ->
+            nowPlayingInfoCenter.nowPlayingInfo = info + (MPMediaItemPropertyArtwork to art)
+        }
     }
 
     fun clear() {
