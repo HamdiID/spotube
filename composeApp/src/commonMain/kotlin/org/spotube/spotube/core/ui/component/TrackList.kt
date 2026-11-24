@@ -88,6 +88,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
@@ -199,6 +200,23 @@ fun TrackList(
     simplified: Boolean = false,
     scrollable: Boolean = true,
     state: LazyListState? = null) {
+    // Spotify-style download badges next to each track.
+    val downloadsViewModel: org.spotube.spotube.modules.downloads.DownloadsViewModel =
+        org.koin.compose.viewmodel.koinViewModel()
+    val downloadItems by downloadsViewModel.downloads.collectAsStateWithLifecycle()
+    val downloadStates = remember(downloadItems) {
+        buildMap {
+            downloadItems.forEach { item ->
+                val id = item.track?.id ?: return@forEach
+                when (item.status) {
+                    is org.spotube.spotube.modules.downloads.DownloadStatus.Completed -> put(id, 2)
+                    is org.spotube.spotube.modules.downloads.DownloadStatus.Downloading,
+                    is org.spotube.spotube.modules.downloads.DownloadStatus.Queued -> if (get(id) != 2) put(id, 1)
+                    else -> {}
+                }
+            }
+        }
+    }
     val filterState = rememberTextFieldState()
     val filterQuery = filterState.text.toString()
     var sortBy by rememberSaveable { mutableStateOf(TrackSortOption.None) }
@@ -267,6 +285,7 @@ fun TrackList(
             showAlbum = showAlbum,
             useDropdownForOptions = useDropdownForOptions,
             isCurrentTrack = track.id == currentTrackId,
+            downloadState = downloadStates[track.id] ?: 0,
             // Only the current row depends on it, so play/pause/buffering flips don't recompose every row.
             isCurrentTrackPlaying = isCurrentTrackPlaying && track.id == currentTrackId,
             isSelectionMode = isSelectionMode,
@@ -627,6 +646,7 @@ private fun TrackListRow(
     useDropdownForOptions: Boolean,
     isCurrentTrack: Boolean,
     isCurrentTrackPlaying: Boolean,
+    downloadState: Int,
     isSelectionMode: Boolean,
     isSelected: Boolean,
     onTrackClick: () -> Unit,
@@ -670,10 +690,16 @@ private fun TrackListRow(
                 overflow = TextOverflow.Ellipsis)
         },
         subtitle = {
-            ArtistChips(
-                artists = track.artists,
-                onArtistClick = onArtistClick,
-                onArtistsOverflowClick = onArtistsOverflowClick)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (downloadState > 0) {
+                    DownloadedBadge(done = downloadState == 2)
+                    Spacer(Modifier.width(5.dp))
+                }
+                ArtistChips(
+                    artists = track.artists,
+                    onArtistClick = onArtistClick,
+                    onArtistsOverflowClick = onArtistsOverflowClick)
+            }
         },
         leading = {
             Row(
@@ -884,6 +910,7 @@ private fun ShimmerTrackListRow(
             useDropdownForOptions = useDropdownForOptions,
             isCurrentTrack = false,
             isCurrentTrackPlaying = false,
+            downloadState = 0,
             isSelectionMode = false,
             isSelected = false,
             onTrackClick = {},
@@ -1039,5 +1066,25 @@ private fun TrackListPreview() {
             tracks = previewTracks(),
             hasMore = true,
             isLoadingNextPage = true)
+    }
+}
+
+
+/** Spotify's little green arrow: filled when downloaded, grey while it is downloading. */
+@Composable
+private fun DownloadedBadge(done: Boolean) {
+    Box(
+        modifier = Modifier
+            .size(14.dp)
+            .clip(androidx.compose.foundation.shape.CircleShape)
+            .background(if (done) org.spotube.spotube.core.ui.spotify.Sp.Green else org.spotube.spotube.core.ui.spotify.Sp.Faint),
+        contentAlignment = Alignment.Center
+    ) {
+        org.spotube.spotube.core.ui.spotify.SpIcon(
+            imageVector = org.spotube.spotube.core.ui.spotify.SpIcons.ArrowDown,
+            contentDescription = null,
+            tint = org.spotube.spotube.core.ui.spotify.Sp.Black,
+            size = 11.dp
+        )
     }
 }

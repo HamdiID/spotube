@@ -400,6 +400,11 @@ internal fun CompactPlayerOverlay(
                         floatingPlayer(
                             Modifier
                                 .zeroSizeUnless(floatingPlayerVisible)
+                                // Tap the mini player to open the full player, like Spotify.
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) { scope.launch { sheetState.animateTo(SheetDetent.FullyExpanded) } }
                                 .graphicsLayer {
                                     alpha = viewModel.floatingPlayerAlpha(progress)
                                 })
