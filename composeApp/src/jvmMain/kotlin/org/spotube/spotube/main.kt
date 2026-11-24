@@ -143,6 +143,9 @@ private fun runOnWorkerThread(name: String, block: () -> Unit) {
 
 @OptIn(ExperimentalComposeUiApi::class, FlowPreview::class)
 fun main() {
+    System.getenv("SPOTUBE_DEMO")?.let {
+        org.spotube.spotube.core.ui.spotify.UiDemo.expandPlayer = "player" in it
+    }
     // Sets compose.application.resources.dir in the native image. initKoin() creates the audio
     // player, whose VLC loader reads it, so it can't wait for nucleusApplication() (which calls
     // this again, harmlessly). Without it the bundled VLC is skipped for the system one.
@@ -167,7 +170,15 @@ fun main() {
     nucleusApplication(backend = NucleusBackend.Tao) {
         val windowStateRepository = remember { KoinServicesProvider.windowStateRepository }
         // Needed before the window is created, so the one-time read at startup is blocking
-        val restored = remember { restoreWindowState(runBlocking { windowStateRepository.load() }) }
+        // SPOTUBE_WINDOW_SIZE ("402x874") is only set by the screenshot workflow.
+        val demoSize = remember {
+            System.getenv("SPOTUBE_WINDOW_SIZE")?.split("x")?.mapNotNull { it.toIntOrNull() }
+                ?.takeIf { it.size == 2 }?.let { DpSize(it[0].dp, it[1].dp) }
+        }
+        val restored = remember {
+            demoSize?.let { PersistedWindowState.of(it, WindowPlacement.Floating) }
+                ?: restoreWindowState(runBlocking { windowStateRepository.load() })
+        }
         val windowState = rememberWindowState(placement = restored.placement, size = restored.size)
 
         // The size to restore into when un-maximizing; only floating windows update it
@@ -239,6 +250,7 @@ fun main() {
                 LocalWindowState provides windowState
             ) {
                 App()
+                System.getenv("SPOTUBE_DEMO")?.let { org.spotube.spotube.core.ui.spotify.UiDemoDriver(it) }
             }
         }
     }

@@ -38,11 +38,12 @@ fun MainViewController() = ComposeUIViewController(configure = {
     initKoin()
     SafariUserAgent.prime()
 }) {
-    val demo = uiDemoMode()
+    // Only ever set by the simulator screenshot script.
+    val demo = platform.Foundation.NSProcessInfo.processInfo.environment["SPOTUBE_DEMO"] as? String
     if (demo != null) org.spotube.spotube.core.ui.spotify.UiDemo.expandPlayer = "player" in demo
     InitNewPipe {
         App()
-        if (demo != null) UiDemoDriver(demo)
+        if (demo != null) org.spotube.spotube.core.ui.spotify.UiDemoDriver(demo)
     }
 }
 

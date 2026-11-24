@@ -1,4 +1,4 @@
-package org.spotube.spotube
+package org.spotube.spotube.core.ui.spotify
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,16 +11,11 @@ import org.spotube.spotube.core.audioplayer.AudioPlayerQueue
 import org.spotube.spotube.core.audioplayer.QueueEntry
 import org.spotube.spotube.core.navigation.NavigationCommands
 import org.spotube.spotube.core.navigation.Routes
-import org.spotube.spotube.core.ui.spotify.UiDemo
 import org.spotube.spotube.modules.welcome.WelcomeRepository
-import platform.Foundation.NSProcessInfo
 
-/** Value of SPOTUBE_DEMO, only ever set by the simulator screenshot script. */
-internal fun uiDemoMode(): String? =
-    NSProcessInfo.processInfo.environment["SPOTUBE_DEMO"] as? String
-
+/** Drives the app into a screen for automated screenshots; only used when SPOTUBE_DEMO is set. */
 @Composable
-internal fun UiDemoDriver(mode: String) {
+fun UiDemoDriver(mode: String) {
     val welcome: WelcomeRepository = koinInject()
     val queue: AudioPlayerQueue = koinInject()
     val navigation: NavigationCommands = koinInject()
