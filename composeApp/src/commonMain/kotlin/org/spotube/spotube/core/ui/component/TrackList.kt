@@ -204,6 +204,7 @@ fun TrackList(
     val downloadsViewModel: org.spotube.spotube.modules.downloads.DownloadsViewModel =
         org.koin.compose.viewmodel.koinViewModel()
     val downloadItems by downloadsViewModel.downloads.collectAsStateWithLifecycle()
+    val downloadedFiles by downloadsViewModel.downloadedFileNames.collectAsStateWithLifecycle()
     val downloadStates = remember(downloadItems) {
         buildMap {
             downloadItems.forEach { item ->
@@ -285,7 +286,8 @@ fun TrackList(
             showAlbum = showAlbum,
             useDropdownForOptions = useDropdownForOptions,
             isCurrentTrack = track.id == currentTrackId,
-            downloadState = downloadStates[track.id] ?: 0,
+            downloadState = downloadStates[track.id]
+                ?: if (downloadsViewModel.downloadBaseName(track) in downloadedFiles) 2 else 0,
             // Only the current row depends on it, so play/pause/buffering flips don't recompose every row.
             isCurrentTrackPlaying = isCurrentTrackPlaying && track.id == currentTrackId,
             isSelectionMode = isSelectionMode,

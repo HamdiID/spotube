@@ -53,14 +53,9 @@ actual class Paths {
     }
 
     actual fun getUserDownloadsDirPath(): String {
-        val downloadsDirectory: NSURL? = NSFileManager.defaultManager.URLForDirectory(
-            directory = NSDownloadsDirectory,
-            inDomain = NSUserDomainMask,
-            appropriateForURL = null,
-            create = false,
-            error = null)
-
-        return (downloadsDirectory?.path ?: getApplicationDataDirPath()) + "/Spotube"
+        // iOS apps can only write inside Documents/Library/tmp. Documents is also what the Files
+        // app shows (On My iPhone > Spotube), so downloads go there.
+        return getApplicationDataDirPath() + "/Downloads"
     }
 
     actual fun getMusicCacheDirPath(): String {

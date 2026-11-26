@@ -82,6 +82,11 @@ class DownloadsViewModel(
         emptyList()
     )
 
+    val downloadedFileNames: StateFlow<Set<String>> = downloadManager.downloadedFileNames
+
+    fun downloadBaseName(track: org.spotube.plugin_interfaces.plugin_apis.metadata.track.MetadataTrack): String =
+        downloadManager.downloadBaseName(track)
+
     val uiState = combine(downloadManager.downloadsFlow, downloadManager.downloadFolder, ::downloadsUiState)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), DownloadsUiState())
 

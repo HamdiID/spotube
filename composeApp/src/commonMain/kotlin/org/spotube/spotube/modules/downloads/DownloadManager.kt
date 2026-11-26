@@ -125,12 +125,30 @@ class DownloadManager(
 
     private val activeJobs = mutableMapOf<String, Job>()
 
+    private val downloadedNames = MutableStateFlow<Set<String>>(emptySet())
+
+    /** File names (without extension) already in the download folder, so badges survive restarts. */
+    val downloadedFileNames: StateFlow<Set<String>> = downloadedNames
+
+    /** The name a track's download is saved under, without extension. */
+    fun downloadBaseName(track: MetadataTrack): String =
+        "${track.artists.joinToString(", ") { it.name }.sanitizeFilename()} - ${track.title.sanitizeFilename()}"
+
+    private fun refreshDownloadedNames() {
+        downloadedNames.value = runCatching {
+            val dir = resolveDownloadDir()
+            if (!fileSystem.exists(dir)) emptySet()
+            else fileSystem.list(dir).map { it.name.substringBeforeLast('.') }.toSet()
+        }.getOrDefault(emptySet())
+    }
+
     init {
         scope.launch {
             settingsRepository.userSettings.collect { settings ->
                 cachedDownloadFolder.value = settings.overloadedDownloadFolder
             }
         }
+        scope.launch { downloadFolder.collect { refreshDownloadedNames() } }
     }
 
     fun enqueue(track: MetadataTrack) {
@@ -284,6 +302,7 @@ class DownloadManager(
             // file until the next full media scan.
             addToMediaLibrary((downloadDir / filename.toPath()).toString())
             logger.i { "[Download ${item.id}] completed '${item.title}'" }
+            refreshDownloadedNames()
 
             downloadsMap.update { map ->
                 map[item.id]?.let {
