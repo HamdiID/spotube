@@ -92,14 +92,15 @@ internal fun LocalTracksContent(
     onPlayFolder: () -> Unit,
     onRequestPermission: () -> Unit,
     modifier: Modifier = Modifier,
-    onManageFolders: () -> Unit = {}
+    onManageFolders: () -> Unit = {},
+    onShuffleFolder: () -> Unit = onPlayFolder
 ) {
     val inset = LocalAppShellBottomInset.current
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         Column(
             Modifier.widthIn(max = 960.dp).fillMaxSize()
         ) {
-            LocalTracksBreadcrumb(state, onNavigateUp, onPlayFolder, onManageFolders = onManageFolders)
+            LocalTracksBreadcrumb(state, onNavigateUp, onPlayFolder, onManageFolders = onManageFolders, onShuffleFolder = onShuffleFolder)
             when {
                 !state.canAccessMedia -> MediaEmptyState(
                     Iconsax.IconsaxFolderOpen,
@@ -198,7 +199,8 @@ internal fun LocalTracksBreadcrumb(
     onNavigateUp: () -> Unit,
     onPlayFolder: () -> Unit,
     modifier: Modifier = Modifier,
-    onManageFolders: (() -> Unit)? = null
+    onManageFolders: (() -> Unit)? = null,
+    onShuffleFolder: () -> Unit = onPlayFolder
 ) {
     val backDescription = stringResource(Res.string.library_local_back)
     Row(
@@ -283,14 +285,21 @@ internal fun LocalTracksBreadcrumb(
                 modifier = Modifier.size(22.dp)
             )
         }
-        if (state.currentFolderPath != null) MillenniumIconButton(
-            onClick = onPlayFolder, enabled = state.canPlayFolder,
-            modifier = Modifier.size(40.dp), style = MillenniumIconButtonStyle.Quiet
-        ) {
-            MillenniumIcon(
-                Iconsax.IconsaxPlay,
-                stringResource(Res.string.library_local_play_folder),
-                modifier = Modifier.size(22.dp)
+        if (state.currentFolderPath != null) {
+            org.spotube.spotube.core.ui.spotify.SpIconButton(
+                imageVector = org.spotube.spotube.core.ui.spotify.SpIcons.Shuffle,
+                contentDescription = stringResource(Res.string.library_local_shuffle_folder),
+                onClick = onShuffleFolder,
+                enabled = state.canPlayFolder,
+                tint = org.spotube.spotube.core.ui.spotify.Sp.SubText,
+                iconSize = 24.dp
+            )
+            org.spotube.spotube.core.ui.spotify.SpPlayButton(
+                isPlaying = false,
+                onClick = onPlayFolder,
+                size = 40.dp,
+                enabled = state.canPlayFolder,
+                contentDescription = stringResource(Res.string.library_local_play_folder)
             )
         }
     }

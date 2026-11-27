@@ -31,7 +31,8 @@ class LocalMediaFoldersConfig(
         } else {
             emptyList()
         }
-        (listOfNotNull(settings.overloadedDownloadFolder) + settings.localMediaFolders + cacheRoot)
+        val downloads = settings.overloadedDownloadFolder?.takeIf { it.isNotBlank() } ?: paths.getUserDownloadsDirPath()
+        (listOf(downloads) + settings.localMediaFolders + cacheRoot)
             .map { it.trim() }
             .filter { it.isNotBlank() }
             .distinct()

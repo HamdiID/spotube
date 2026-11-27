@@ -34,6 +34,9 @@ class LocalFolderViewModel(
 
     fun playFolder() = play(0)
 
+    /** Spotify's shuffle button: random order, starting anywhere. */
+    fun shuffleFolder() = play(0, shuffled = true)
+
     fun playTrack(trackPath: String) {
         val index = tracks().indexOfFirst { it.path == trackPath }
         if (index >= 0) play(index)
@@ -42,8 +45,8 @@ class LocalFolderViewModel(
     private fun tracks(): List<LocalMediaTrack> =
         state.value.currentFolder?.tracks.orEmpty()
 
-    private fun play(startPosition: Int) {
-        val tracks = tracks()
+    private fun play(startPosition: Int, shuffled: Boolean = false) {
+        val tracks = if (shuffled) tracks().shuffled() else tracks()
         if (tracks.isEmpty()) return
         viewModelScope.launch {
             audioPlayerQueue.load(

@@ -28,6 +28,7 @@ fun LocalFolderScreen(viewModel: LocalFolderViewModel, onBack: () -> Unit) {
             onPlayTrack = viewModel::playTrack,
             onNavigateUp = onBack,
             onPlayFolder = viewModel::playFolder,
+            onShuffleFolder = viewModel::shuffleFolder,
             onRequestPermission = {},
             modifier = Modifier.padding(horizontal = 12.dp)
         )

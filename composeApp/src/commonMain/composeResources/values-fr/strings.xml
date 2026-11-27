@@ -939,4 +939,5 @@
     <string name="offline_title">Vous êtes hors ligne</string>
     <string name="offline_description">Vos téléchargements sont toujours là. Vérifiez votre connexion pour voir le reste.</string>
     <string name="offline_go_to_downloads">Voir mes téléchargements</string>
+    <string name="library_local_shuffle_folder">Lecture aléatoire</string>
 </resources>

@@ -1141,4 +1141,5 @@
     <string name="offline_title">You\'re offline</string>
     <string name="offline_description">Your downloads are still here. Check your connection to see everything else.</string>
     <string name="offline_go_to_downloads">Go to Downloads</string>
+    <string name="library_local_shuffle_folder">Shuffle play</string>
 </resources>

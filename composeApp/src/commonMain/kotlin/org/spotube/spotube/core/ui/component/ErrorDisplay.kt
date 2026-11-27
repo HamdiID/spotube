@@ -313,7 +313,7 @@ fun OfflineDisplay(onRetry: () -> Unit, modifier: Modifier = Modifier) {
                 .clip(androidx.compose.foundation.shape.RoundedCornerShape(24.dp))
                 .background(org.spotube.spotube.core.ui.spotify.Sp.Text)
                 .then(org.spotube.spotube.core.ui.spotify.bouncyClickModifier {
-                    libraryState.onTabSelected(org.spotube.spotube.modules.library.LibraryTab.Downloads)
+                    libraryState.onTabSelected(org.spotube.spotube.modules.library.LibraryTab.LocalTracks)
                     navigationCommands.navigateTo(org.spotube.spotube.core.navigation.Routes.Library)
                 })
                 .padding(horizontal = 28.dp),
