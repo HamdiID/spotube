@@ -3,6 +3,8 @@
  */
 package org.spotube.spotube.modules.downloads
 
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.background
 import org.spotube.millennium.composables.MillenniumStripedProgress
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,6 +58,7 @@ fun DownloadsScreen(
     topContent: @Composable () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val savedFiles by viewModel.downloadedFiles.collectAsStateWithLifecycle()
     Column(modifier.fillMaxSize()) {
         if (headerInAppBar) {
             ApplicationMainBar(
@@ -74,7 +77,9 @@ fun DownloadsScreen(
             viewModel::clearCompleted,
             Modifier.weight(1f)
                 .then(if (headerInAppBar) Modifier.padding(horizontal = 12.dp) else Modifier),
-            showHeader = !headerInAppBar
+            showHeader = !headerInAppBar,
+            savedFiles = savedFiles,
+            onPlaySaved = viewModel::playDownloadedFiles
         )
     }
 }
@@ -135,7 +140,9 @@ internal fun DownloadsContent(
     onRemove: (String) -> Unit,
     onClearCompleted: () -> Unit,
     modifier: Modifier = Modifier,
-    showHeader: Boolean = true
+    showHeader: Boolean = true,
+    savedFiles: List<String> = emptyList(),
+    onPlaySaved: (String?, Boolean) -> Unit = { _, _ -> }
 ) {
     val inset = LocalAppShellBottomInset.current
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
@@ -151,7 +158,7 @@ internal fun DownloadsContent(
                 }
                 DownloadsToolbarActions(state, onClearCompleted)
             }
-            if (state.items.isEmpty()) MediaEmptyState(
+            if (state.items.isEmpty() && savedFiles.isEmpty()) MediaEmptyState(
                 Iconsax.IconsaxDirectboxReceive,
                 stringResource(Res.string.downloads_empty),
                 Modifier.padding(bottom = inset)
@@ -164,6 +171,12 @@ internal fun DownloadsContent(
                 ),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                if (savedFiles.isNotEmpty()) {
+                    item(key = "saved_header") { SavedSongsHeader(savedFiles.size, onPlaySaved) }
+                    items(savedFiles, key = { "saved_$it" }) { path ->
+                        SavedSongRow(path) { onPlaySaved(path, false) }
+                    }
+                }
                 items(state.items, key = { it.id }) { row ->
                     DownloadListRow(
                         row,
@@ -254,6 +267,94 @@ internal fun DownloadListRow(
                     }
                 )
             )
+        }
+    }
+}
+
+
+@Composable
+private fun SavedSongsHeader(count: Int, onPlay: (String?, Boolean) -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(
+                stringResource(Res.string.downloads_saved_songs),
+                style = AppTheme.typography.titleLarge,
+                color = org.spotube.spotube.core.ui.spotify.Sp.Text
+            )
+            Text(
+                count.toString(),
+                style = AppTheme.typography.bodySmall,
+                color = org.spotube.spotube.core.ui.spotify.Sp.SubText
+            )
+        }
+        org.spotube.spotube.core.ui.spotify.SpIconButton(
+            imageVector = org.spotube.spotube.core.ui.spotify.SpIcons.Shuffle,
+            contentDescription = null,
+            onClick = { onPlay(null, true) },
+            tint = org.spotube.spotube.core.ui.spotify.Sp.SubText,
+            iconSize = 26.dp
+        )
+        org.spotube.spotube.core.ui.spotify.SpPlayButton(
+            isPlaying = false,
+            onClick = { onPlay(null, false) },
+            size = 52.dp
+        )
+    }
+}
+
+@Composable
+private fun SavedSongRow(path: String, onClick: () -> Unit) {
+    val (artist, title) = downloadedFileLabel(path)
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .then(org.spotube.spotube.core.ui.spotify.bouncyClickModifier(onClick))
+            .padding(horizontal = 4.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Box(
+            Modifier
+                .size(48.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(org.spotube.spotube.core.ui.spotify.Sp.Highlight),
+            contentAlignment = Alignment.Center
+        ) {
+            org.spotube.spotube.core.ui.spotify.SpIcon(
+                org.spotube.spotube.core.ui.spotify.SpIcons.Music, null,
+                tint = org.spotube.spotube.core.ui.spotify.Sp.SubText, size = 22.dp
+            )
+        }
+        Column(Modifier.weight(1f)) {
+            Text(
+                title,
+                style = AppTheme.typography.bodyLarge,
+                color = org.spotube.spotube.core.ui.spotify.Sp.Text,
+                maxLines = 1, overflow = TextOverflow.Ellipsis
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier.size(13.dp).clip(androidx.compose.foundation.shape.CircleShape)
+                        .background(org.spotube.spotube.core.ui.spotify.Sp.Green),
+                    contentAlignment = Alignment.Center
+                ) {
+                    org.spotube.spotube.core.ui.spotify.SpIcon(
+                        org.spotube.spotube.core.ui.spotify.SpIcons.ArrowDown, null,
+                        tint = org.spotube.spotube.core.ui.spotify.Sp.Black, size = 10.dp
+                    )
+                }
+                androidx.compose.foundation.layout.Spacer(Modifier.size(5.dp))
+                Text(
+                    artist ?: "",
+                    style = AppTheme.typography.bodySmall,
+                    color = org.spotube.spotube.core.ui.spotify.Sp.SubText,
+                    maxLines = 1, overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }

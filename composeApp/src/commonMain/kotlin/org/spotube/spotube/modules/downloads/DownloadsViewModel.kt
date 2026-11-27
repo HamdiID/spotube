@@ -17,6 +17,7 @@
 
 package org.spotube.spotube.modules.downloads
 
+import kotlinx.coroutines.launch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import org.spotube.plugin_interfaces.plugin_apis.metadata.track.MetadataTrack
@@ -84,6 +85,37 @@ class DownloadsViewModel(
 
     val downloadedFileNames: StateFlow<Set<String>> = downloadManager.downloadedFileNames
 
+    /** Files already on the phone: listed and playable even offline. */
+    val downloadedFiles: StateFlow<List<String>> = downloadManager.downloadedFiles
+
+    init {
+        downloadManager.refreshDownloadedNames()
+    }
+
+    fun playDownloadedFiles(startPath: String? = null, shuffle: Boolean = false) {
+        var paths = downloadedFiles.value
+        if (paths.isEmpty()) return
+        if (shuffle) paths = paths.shuffled()
+        val start = startPath?.let { paths.indexOf(it) }?.coerceAtLeast(0) ?: 0
+        val queue = org.koin.mp.KoinPlatform.getKoin().get<org.spotube.spotube.core.audioplayer.AudioPlayerQueue>()
+        viewModelScope.launch {
+            queue.load(
+                entries = paths.map { path ->
+                    val (artist, title) = downloadedFileLabel(path)
+                    org.spotube.spotube.core.audioplayer.QueueEntry.LocalTrack(
+                        name = title,
+                        artists = listOfNotNull(artist),
+                        duration = 0L,
+                        album = null,
+                        url = path
+                    )
+                },
+                autoPlay = true,
+                startPosition = start
+            )
+        }
+    }
+
     fun downloadBaseName(track: org.spotube.plugin_interfaces.plugin_apis.metadata.track.MetadataTrack): String =
         downloadManager.downloadBaseName(track)
 
@@ -115,4 +147,12 @@ class DownloadsViewModel(
     fun clearCompleted() {
         downloadManager.clearCompleted()
     }
+}
+
+
+/** "Artist - Title.m4a" -> (Artist, Title). */
+fun downloadedFileLabel(path: String): Pair<String?, String> {
+    val base = path.substringAfterLast('/').substringBeforeLast('.')
+    val i = base.indexOf(" - ")
+    return if (i > 0) base.substring(0, i) to base.substring(i + 3) else null to base
 }

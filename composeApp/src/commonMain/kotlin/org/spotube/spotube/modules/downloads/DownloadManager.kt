@@ -126,6 +126,10 @@ class DownloadManager(
     private val activeJobs = mutableMapOf<String, Job>()
 
     private val downloadedNames = MutableStateFlow<Set<String>>(emptySet())
+    private val downloadedPaths = MutableStateFlow<List<String>>(emptyList())
+
+    /** Absolute paths of the audio files in the download folder (what plays offline). */
+    val downloadedFiles: StateFlow<List<String>> = downloadedPaths
 
     /** File names (without extension) already in the download folder, so badges survive restarts. */
     val downloadedFileNames: StateFlow<Set<String>> = downloadedNames
@@ -143,13 +147,19 @@ class DownloadManager(
         fileSystem.list(dir).firstOrNull { it.name.substringBeforeLast('.') == base }?.toString()
     }.getOrNull()
 
-    private fun refreshDownloadedNames() {
-        downloadedNames.value = runCatching {
+    fun refreshDownloadedNames() {
+        val files = runCatching {
             val dir = resolveDownloadDir()
-            if (!fileSystem.exists(dir)) emptySet()
-            else fileSystem.list(dir).map { it.name.substringBeforeLast('.') }.toSet()
-        }.getOrDefault(emptySet())
+            if (!fileSystem.exists(dir)) emptyList()
+            else fileSystem.list(dir).filter {
+                it.name.substringAfterLast('.', "").lowercase() in audioExtensions
+            }.sortedBy { it.name.lowercase() }
+        }.getOrDefault(emptyList())
+        downloadedPaths.value = files.map { it.toString() }
+        downloadedNames.value = files.map { it.name.substringBeforeLast('.') }.toSet()
     }
+
+    private val audioExtensions = setOf("m4a", "mp3", "opus", "webm", "ogg", "flac", "aac", "wav", "mp4")
 
     init {
         scope.launch {

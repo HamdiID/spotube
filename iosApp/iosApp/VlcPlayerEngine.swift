@@ -59,7 +59,17 @@ final class VlcPlayerEngine: NSObject, NativePlayerEngine, VLCMediaPlayerDelegat
     func load(url: String, autoPlay: Bool, startPositionMs: Int64) {
         onMain {
             guard !self.released else { return }
-            guard let mediaUrl = URL(string: url) else {
+            // Downloaded / local songs come as plain file paths, often with spaces in their name
+            // ("Artist - Title.m4a"): URL(string:) rejects those, so build a file URL instead.
+            let mediaUrl: URL
+            if url.hasPrefix("/") {
+                mediaUrl = URL(fileURLWithPath: url)
+            } else if let parsed = URL(string: url) {
+                mediaUrl = parsed
+            } else if let encoded = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                      let parsed = URL(string: encoded) {
+                mediaUrl = parsed
+            } else {
                 self.listener?.onError(message: "Invalid URL: \(url)")
                 return
             }
