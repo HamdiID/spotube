@@ -1,0 +1,80 @@
+> Task :webview-compose:generateResourceAccessorsForAppleMain SKIPPED
+> Task :webview-compose:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :webview-compose:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :webview-compose:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :webview-compose:generateResourceAccessorsForIosMain SKIPPED
+> Task :webview-compose:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :webview-compose:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :webview-compose:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :webview-compose:generateResourceAccessorsForNativeMain SKIPPED
+> Task :webview-compose:sourcesJar
+> Task :webview-compose:generatePomFileForKotlinMultiplatformPublication
+> Task :webview-compose:kotlinMultiplatformEmptyJavadocJar FROM-CACHE
+> Task :webview-compose:checkWasmJsMainComposeLibrariesCompatibility
+> Task :webview-compose:convertXmlValueResourcesForWasmJsMain NO-SOURCE
+> Task :webview-compose:copyNonXmlValueResourcesForWasmJsMain NO-SOURCE
+> Task :webview-compose:prepareComposeResourcesTaskForWasmJsMain NO-SOURCE
+> Task :webview-compose:generateResourceAccessorsForWasmJsMain SKIPPED
+> Task :webview-compose:convertXmlValueResourcesForWebMain NO-SOURCE
+> Task :webview-compose:copyNonXmlValueResourcesForWebMain NO-SOURCE
+> Task :webview-compose:prepareComposeResourcesTaskForWebMain NO-SOURCE
+> Task :webview-compose:generateResourceAccessorsForWebMain SKIPPED
+> Task :webview-compose:generateActualResourceCollectorsForWasmJsMain SKIPPED
+> Task :webview-compose:compileCommonMainKotlinMetadata
+> Task :webview-compose:metadataCommonMainClasses
+> Task :webview-compose:allMetadataJar
+> Task :webview-compose:generateMetadataFileForKotlinMultiplatformPublication
+> Task :webview-compose:publishKotlinMultiplatformPublicationToMavenLocal
+> Task :webview-compose:wasmJsResolveResourcesFromDependencies
+> Task :webview-compose:assembleWasmJsMainResources
+> Task :webview-compose:wasmJsResolveSelfResourcesCopyHierarchicalMultiplatformResources
+> Task :webview-compose:wasmJsAggregateResources
+> Task :webview-compose:wasmJsProcessResources
+> Task :kotlinWasmKotlinNpmCachesSetup
+> Task :webview-compose:wasmJsPackageJson
+> Task :webview-compose:wasmJsPublicPackageJson
+> Task :webview-compose:wasmJsSourcesJar
+> Task :webview-compose:wasmJsCopyHierarchicalMultiplatformResources
+> Task :webview-compose:wasmJsZipMultiplatformResourcesForPublication
+> Task :webview-compose:generatePomFileForWasmJsPublication
+> Task :webview-compose:wasmJsEmptyJavadocJar FROM-CACHE
+> Task :webview-compose:compileKotlinWasmJs
+> Task :webview-compose:wasmJsMainClasses
+> Task :webview-compose:wasmJsJar
+> Task :webview-compose:generateMetadataFileForWasmJsPublication
+> Task :webview-compose:publishWasmJsPublicationToMavenLocal
+
+> Task :webview-compose:compileReleaseKotlinAndroid
+w: file:///home/runner/work/spotube/spotube/compose-webview/webview-compose/src/androidMain/kotlin/dev/nucleusframework/webview/cookie/AndroidCookieManager.kt:38:22 'fun resume(value: Unit, onCancellation: ((Throwable) -> Unit)?): Unit' is deprecated. Use the overload that also accepts the `value` and the coroutine context in lambda.
+w: file:///home/runner/work/spotube/spotube/compose-webview/webview-compose/src/androidMain/kotlin/dev/nucleusframework/webview/web/WebViewAndroid.kt:144:9 'var allowFileAccessFromFileURLs: Boolean' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/spotube/spotube/compose-webview/webview-compose/src/androidMain/kotlin/dev/nucleusframework/webview/web/WebViewAndroid.kt:145:9 'var allowUniversalAccessFromFileURLs: Boolean' is deprecated. Deprecated in Java.
+
+> Task :webview-compose:compileKotlinJvm
+> Task :webview-compose:extractReleaseAnnotations
+> Task :webview-compose:compileReleaseJavaWithJavac NO-SOURCE
+> Task :webview-compose:mergeReleaseGeneratedProguardFiles
+> Task :webview-compose:mergeReleaseConsumerProguardFiles
+> Task :webview-compose:processReleaseJavaRes
+> Task :webview-compose:compileJvmMainJava NO-SOURCE
+> Task :webview-compose:jvmMainClasses
+> Task :webview-compose:jvmJar
+> Task :webview-compose:generateMetadataFileForJvmPublication
+> Task :webview-compose:publishJvmPublicationToMavenLocal
+> Task :webview-compose:mergeReleaseJavaResource
+> Task :webview-compose:syncReleaseLibJars
+> Task :webview-compose:bundleReleaseAar
+> Task :webview-compose:generateMetadataFileForAndroidReleasePublication
+> Task :webview-compose:publishAndroidReleasePublicationToMavenLocal
+> Task :webview-compose:publishToMavenLocal
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795817655050.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/spotube/spotube/compose-webview/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.5.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 41s
+70 actionable tasks: 67 executed, 3 from cache

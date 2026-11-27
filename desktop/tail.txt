@@ -1,0 +1,150 @@
+Solutions:
+ * Remove the cinterop dependencies 'uniffi' from target 'iosArm64'
+ * Build on a compatible host platform for this target/cinterop combination
+ * To disable klib cross compilation entirely, add 'kotlin.native.enableKlibsCrossCompilation=false' to your Gradle properties
+
+w: ⚠️ Cross Compilation with Cinterop Not Supported in Project 'composeApp'
+In project 'composeApp', cross compilation to target 'iosSimulatorArm64' has been disabled because it contains cinterops: 'uniffi' which cannot be processed on host 'linux_x64'.
+Cinterop libraries require platform-specific native toolchains that aren't available on the current host system.
+Solutions:
+ * Remove the cinterop dependencies 'uniffi' from target 'iosSimulatorArm64'
+ * Build on a compatible host platform for this target/cinterop combination
+ * To disable klib cross compilation entirely, add 'kotlin.native.enableKlibsCrossCompilation=false' to your Gradle properties
+
+w: ⚠️ Default Kotlin Hierarchy Template Not Applied Correctly
+The Default Kotlin Hierarchy Template was not applied to 'project ':composeApp'':
+Explicit .dependsOn() edges were configured for the following source sets:
+[androidJvmMain, androidMain, iosArm64Main, iosMain, iosSimulatorArm64Main, jvmMain, mobileMain]
+
+Consider removing dependsOn-calls or disabling the default template by adding
+    'kotlin.mpp.applyDefaultHierarchyTemplate=false'
+to your gradle.properties
+Solution: Please remove the dependsOn-calls or disable the default template.
+Learn more about hierarchy templates: https://kotl.in/hierarchy-template
+
+w: ⚠️ Unused Kotlin Source Sets
+The Kotlin source set androidUnitTestRelease was configured but not added to any Kotlin compilation.
+Solution: You can add a source set to a target's compilation by connecting it with the compilation's default source set using 'dependsOn'.
+See https://kotl.in/connecting-source-sets
+
+w: ⚠️ Disabled Kotlin/Native Targets
+The following Kotlin/Native targets cannot be built on this machine and are disabled:
+iosArm64, iosSimulatorArm64
+Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+
+w: ⚠️ CInterop Commonization Disabled
+The project is using Kotlin Multiplatform with hierarchical structure and disabled 'cinterop commonization'
+
+'cinterop commonization' can be enabled in your 'gradle.properties'
+kotlin.mpp.enableCInteropCommonization=true
+
+To hide this message, add to your 'gradle.properties'
+kotlin.mpp.enableCInteropCommonization.nowarn=true 
+
+The following source sets are affected: 
+[iosMain]
+
+The following cinterops are affected: 
+[cinterop:compilation/compileKotlinIosArm64/rust, cinterop:compilation/compileKotlinIosArm64/uniffi, cinterop:compilation/compileKotlinIosSimulatorArm64/rust, cinterop:compilation/compileKotlinIosSimulatorArm64/uniffi]
+Solution: Please enable 'cinterop commonization' in your 'gradle.properties'
+See: https://kotlinlang.org/docs/mpp-share-on-platforms.html#use-native-libraries-in-the-hierarchical-structure
+
+
+> Configure project :js_plugin_example
+w: file:///home/runner/work/spotube/spotube/js_plugin_example/build.gradle.kts:54:30: 'var yarnLockAutoReplace: Boolean' is deprecated. Updated to use the Provider API. Use `yarnLockAutoReplaceProperty` instead. Scheduled for removal in 2.7.0.
+
+> Configure project :plugin_interfaces
+w: file:///home/runner/work/spotube/spotube/plugin_interfaces/build.gradle.kts:34:5: 'fun KotlinMultiplatformExtension.androidLibrary(configure: Action<DeprecatedKotlinMultiplatformAndroidLibraryTarget>): Unit' is deprecated. The 'androidLibrary' block is deprecated. Please use 'android' instead.
+w: ⚠️ Native task 'iosX64Test' is disabled
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (linux-x86_64).
+Reason: simulator tests require macOS
+Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+
+
+> Task :plugin_interfaces:kmpPartiallyResolvedDependenciesChecker
+> Task :plugin_interfaces:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :plugin_interfaces:jvmProcessResources NO-SOURCE
+> Task :plugin_interfaces:processJvmMainResources SKIPPED
+
+> Task :composeApp:checkJvmMainComposeLibrariesCompatibility
+w: Skiko dependencies' versions are incompatible.
+    io.coil-kt.coil3:coil-core-jvm:3.5.0
+    \--- org.jetbrains.skiko:skiko:0.144.6 -> 0.150.2
+
+This may lead to compilation errors or unexpected behavior at runtime.
+Such version mismatch might be caused by dependency constraints in one of the included libraries.
+You can inspect resulted dependencies tree via `./gradlew :composeApp:dependencies  --configuration jvmRuntimeClasspath`.
+See more details in Gradle documentation: https://docs.gradle.org/current/userguide/viewing_debugging_dependencies.html#sec:listing-dependencies
+
+Note: Skiko is considered implementation detail in Compose Multiplatform and might be incompatible across versions.
+Please align Skiko dependencies to the same version. If possible, avoid direct Skiko references and use Compose APIs instead.
+
+
+> Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :composeApp:convertXmlValueResourcesForAndroidJvmMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidJvmMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidJvmMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidJvmMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonMain
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain
+> Task :composeApp:generateResourceAccessorsForCommonMain
+> Task :composeApp:convertXmlValueResourcesForJvmMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForJvmMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForJvmMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForJvmMain NO-SOURCE
+> Task :composeApp:generateActualResourceCollectorsForJvmMain
+> Task :composeApp:generateAppBuildInfo
+> Task :composeApp:generateComposeResClass
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain
+> Task :composeApp:generateVlcBundleLoader
+> Task :composeApp:assembleJvmMainResources
+> Task :composeApp:generateAppProperties
+> Task :composeApp:jvmProcessResources
+> Task :composeApp:processJvmMainResources SKIPPED
+
+> Task :composeApp:rustUpTargetAddAndroidArm64
+info: downloading component rust-std
+
+> Task :composeApp:installUniffiBindgen
+> Task :plugin_interfaces:compileKotlinJvm
+> Task :composeApp:cargoBuildAndroidArm64Debug
+> Task :plugin_interfaces:compileJvmMainJava NO-SOURCE
+> Task :plugin_interfaces:jvmMainClasses
+> Task :plugin_interfaces:jvmJar
+> Task :composeApp:mergeUniffiConfig
+
+> Task :composeApp:cargoBuildAndroidArm64Debug
+note: link against the following native artifacts when linking against this static library. The order and any duplication can be significant on some platforms
+
+
+
+
+> Task :composeApp:buildUniffiBindings
+> Task :composeApp:compileKotlinJvm
+w: file:///home/runner/work/spotube/spotube/composeApp/build/generated/uniffi/jvmMain/kotlin/uniffi/compose_app/compose_app.jvm.kt:1066:9 Expression is unused.
+w: file:///home/runner/work/spotube/spotube/composeApp/build/generated/uniffi/jvmMain/kotlin/uniffi/compose_app/compose_app.jvm.kt:1408:5 Expression is unused.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/androidJvmMain/kotlin/org/spotube/spotube/core/newpipe/NewPipeService.androidJvm.kt:148:93 'field resolution: String!' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/androidJvmMain/kotlin/org/spotube/spotube/core/newpipe/NewPipeService.androidJvm.kt:149:71 'field isVideoOnly: Boolean' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/core/server/LocalServer.kt:113:33 Unnecessary safe call on a non-null receiver of type 'UserSettings'.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/core/server/LocalServer.kt:123:25 Condition is always 'true'.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/core/ui/component/CollectionDetails.kt:126:49 Unnecessary non-null assertion (!!) on a non-null receiver of type '() -> Unit'.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/core/ui/component/ErrorDisplay.kt:100:28 'val LocalClipboardManager: ProvidableCompositionLocal<ClipboardManager>' is deprecated. Use LocalClipboard instead which supports suspend functions.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/core/ui/component/ErrorDisplay.kt:215:28 'val LocalClipboardManager: ProvidableCompositionLocal<ClipboardManager>' is deprecated. Use LocalClipboard instead which supports suspend functions.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/modules/devices/DevicesScreen.kt:214:25 Unnecessary safe call on a non-null receiver of type 'UserSettings'.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/modules/jam/JamScreen.kt:92:21 'val LocalClipboardManager: ProvidableCompositionLocal<ClipboardManager>' is deprecated. Use LocalClipboard instead which supports suspend functions.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/modules/lyrics/LyricsScreen.kt:186:38 Elvis operator (?:) always returns the left operand of non-nullable type 'String'.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/modules/settings/SettingsRepository.kt:62:62 Cast is redundant.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/modules/settings/SettingsViewModel.kt:44:55 Elvis operator (?:) always returns the left operand of non-nullable type 'UserSettings'.
+w: file:///home/runner/work/spotube/spotube/composeApp/src/commonMain/kotlin/org/spotube/spotube/modules/shell/AppExpandedPlayer.kt:395:53 Unnecessary safe call on a non-null receiver of type 'DownloadItem'.
+
+> Task :composeApp:compileJvmMainJava NO-SOURCE
+> Task :composeApp:jvmMainClasses
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1795817756805.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/spotube/spotube/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 4m 17s
+26 actionable tasks: 26 executed
+Configuration cache entry stored.

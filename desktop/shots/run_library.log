@@ -1,0 +1,95 @@
+Reusing configuration cache.
+> Task :composeApp:installUniffiBindgen UP-TO-DATE
+> Task :plugin_interfaces:jvmProcessResources NO-SOURCE
+> Task :plugin_interfaces:kmpPartiallyResolvedDependenciesChecker
+> Task :plugin_interfaces:processJvmMainResources SKIPPED
+> Task :plugin_interfaces:checkKotlinGradlePluginConfigurationErrors SKIPPED
+
+> Task :composeApp:checkJvmMainComposeLibrariesCompatibility
+w: Skiko dependencies' versions are incompatible.
+    io.coil-kt.coil3:coil-core-jvm:3.5.0
+    \--- org.jetbrains.skiko:skiko:0.144.6 -> 0.150.2
+
+This may lead to compilation errors or unexpected behavior at runtime.
+Such version mismatch might be caused by dependency constraints in one of the included libraries.
+You can inspect resulted dependencies tree via `./gradlew :composeApp:dependencies  --configuration jvmRuntimeClasspath`.
+See more details in Gradle documentation: https://docs.gradle.org/current/userguide/viewing_debugging_dependencies.html#sec:listing-dependencies
+
+Note: Skiko is considered implementation detail in Compose Multiplatform and might be incompatible across versions.
+Please align Skiko dependencies to the same version. If possible, avoid direct Skiko references and use Compose APIs instead.
+
+
+> Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :plugin_interfaces:compileKotlinJvm UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForAndroidJvmMain NO-SOURCE
+> Task :plugin_interfaces:compileJvmMainJava NO-SOURCE
+> Task :plugin_interfaces:jvmMainClasses UP-TO-DATE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidJvmMain NO-SOURCE
+> Task :plugin_interfaces:jvmJar UP-TO-DATE
+> Task :composeApp:mergeUniffiConfig UP-TO-DATE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidJvmMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidJvmMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForJvmMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:copyNonXmlValueResourcesForJvmMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForJvmMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForJvmMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:generateAppBuildInfo UP-TO-DATE
+> Task :composeApp:generateComposeResClass UP-TO-DATE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForCommonMain UP-TO-DATE
+> Task :composeApp:generateVlcBundleLoader UP-TO-DATE
+> Task :composeApp:generateActualResourceCollectorsForJvmMain UP-TO-DATE
+> Task :composeApp:generateAppProperties UP-TO-DATE
+> Task :composeApp:assembleJvmMainResources UP-TO-DATE
+> Task :composeApp:downloadVlcNatives UP-TO-DATE
+> Task :composeApp:jvmProcessResources UP-TO-DATE
+> Task :composeApp:processJvmMainResources SKIPPED
+> Task :composeApp:prepareAppResources NO-SOURCE
+> Task :composeApp:rustUpTargetAddAndroidArm64 UP-TO-DATE
+> Task :composeApp:rustUpTargetAddLinuxX64 UP-TO-DATE
+> Task :composeApp:cargoBuildLinuxX64Debug UP-TO-DATE
+> Task :composeApp:cargoBuildAndroidArm64Debug UP-TO-DATE
+> Task :composeApp:findDynamicLibrariesLinuxX64Debug UP-TO-DATE
+> Task :composeApp:buildUniffiBindings UP-TO-DATE
+> Task :composeApp:jarJvmRustRuntimeLinuxX64Debug UP-TO-DATE
+> Task :composeApp:compileKotlinJvm UP-TO-DATE
+> Task :composeApp:compileJvmMainJava NO-SOURCE
+> Task :composeApp:jvmMainClasses UP-TO-DATE
+> Task :composeApp:jvmJar UP-TO-DATE
+
+> Task :composeApp:run
+Info: (koin) Started 104 definitions in 3.014 ms
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Debug: (PluginManager) ziplineServices: flow restarting with generation=0, selectedPlugins=[AUDIO, LYRICS]
+Debug: (PluginManager) ziplineServices: creating service for NewPipe YouTube (c3b3e2b9)
+Debug: (PluginManager) ziplineServices: creating service for LRCLib Lyrics (615c8631)
+[00007fed1113a740] vlcpulse audio output error: PulseAudio server connection failure: Connection refused
+[00007fed1130f9b0] vlcpulse audio output error: PulseAudio server connection failure: Connection refused
+Debug: (DeviceAudioPlayerQueue) Initializing DeviceAudioPlayerQueue
+Debug: (DeviceAudioPlayerQueue) Starting restoration of persisted queue state
+Debug: (DeviceAudioPlayerQueue) Current media item changed, persisting queue state
+Debug: (DeviceAudioPlayerQueue) Playlist changed, persisting queue state
+Debug: (DeviceAudioPlayerQueue) No persisted state found
+Debug: (DeviceAudioPlayerQueue) Persisted queue state restoration completed
+Debug: (DeviceAudioPlayerQueue) Persisting queue state: clearing state (queue is empty)
+Debug: (DeviceAudioPlayerQueue) Persisting queue state: clearing state (queue is empty)
+Debug: (LocalServer) Starting playback proxy port watcher
+Debug: (LocalServer) Observed server config change: port=14769, allowRemoteControl=false
+Debug: (DiscordRpcService) Starting Discord RPC service
+Debug: (LocalServer) Restarting playback proxy server on 127.0.0.1:14769 (remoteControl=false)
+Info: (LocalServer) Playback proxy server started at http://127.0.0.1:14769
+
+(java:12309): dbind-WARNING **: 22:22:27.611: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+Debug: (NavigationState) Current entries: Home
+Debug: (NavigationState) Current entries: Home
+Debug: (NavigationState) Current entries: Home
+Debug: (Navigator) Navigating to top-level route: Library, cleared back stack: true
+Debug: (NavigationState) Current entries: Home->Library

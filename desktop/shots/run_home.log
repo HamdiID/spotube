@@ -1,0 +1,199 @@
+Calculating task graph as no cached configuration is available for tasks: :composeApp:run
+Type-safe project accessors is an incubating feature.
+Project accessors enabled, but root project name not explicitly set for 'buildSrc'. Checking out the project in different folders will impact the generated code and implicitly the buildscript classpath, breaking caching.
+> Task :buildSrc:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :buildSrc:compileKotlin UP-TO-DATE
+> Task :buildSrc:compileJava NO-SOURCE
+> Task :buildSrc:compileGroovy NO-SOURCE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources NO-SOURCE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+
+> Configure project :composeApp
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.sourceset.disallowProvider=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+w: ⚠️ The 'org.jetbrains.kotlin.multiplatform' plugin deprecated compatibility with Android Gradle plugin: 'com.android.application'
+The 'org.jetbrains.kotlin.multiplatform' plugin is not compatible with 'com.android.application' starting with Android Gradle Plugin 9.0.0.
+
+Please change the structure of the your project and move the usage of 'com.android.application' into a separate subproject. The new subproject should add a dependency on this KMP subproject.
+
+Read more: https://kotl.in/kmp-project-structure-migration
+Solution: Please change the structure of your project and move the usage of 'com.android.application' into a separate subproject.
+See https://kotl.in/gradle/agp-new-kmp for more details.
+
+w: ⚠️ Native task 'iosSimulatorArm64Test' is disabled
+Task 'iosSimulatorArm64Test' for target 'ios_simulator_arm64' cannot run on the current host (linux-x86_64).
+Reason: simulator tests require macOS
+Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+
+w: ⚠️ Cross Compilation with Cinterop Not Supported in Project 'composeApp'
+In project 'composeApp', cross compilation to target 'iosArm64' has been disabled because it contains cinterops: 'uniffi' which cannot be processed on host 'linux_x64'.
+Cinterop libraries require platform-specific native toolchains that aren't available on the current host system.
+Solutions:
+ * Remove the cinterop dependencies 'uniffi' from target 'iosArm64'
+ * Build on a compatible host platform for this target/cinterop combination
+ * To disable klib cross compilation entirely, add 'kotlin.native.enableKlibsCrossCompilation=false' to your Gradle properties
+
+w: ⚠️ Cross Compilation with Cinterop Not Supported in Project 'composeApp'
+In project 'composeApp', cross compilation to target 'iosSimulatorArm64' has been disabled because it contains cinterops: 'uniffi' which cannot be processed on host 'linux_x64'.
+Cinterop libraries require platform-specific native toolchains that aren't available on the current host system.
+Solutions:
+ * Remove the cinterop dependencies 'uniffi' from target 'iosSimulatorArm64'
+ * Build on a compatible host platform for this target/cinterop combination
+ * To disable klib cross compilation entirely, add 'kotlin.native.enableKlibsCrossCompilation=false' to your Gradle properties
+
+w: ⚠️ Default Kotlin Hierarchy Template Not Applied Correctly
+The Default Kotlin Hierarchy Template was not applied to 'project ':composeApp'':
+Explicit .dependsOn() edges were configured for the following source sets:
+[androidJvmMain, androidMain, iosArm64Main, iosMain, iosSimulatorArm64Main, jvmMain, mobileMain]
+
+Consider removing dependsOn-calls or disabling the default template by adding
+    'kotlin.mpp.applyDefaultHierarchyTemplate=false'
+to your gradle.properties
+Solution: Please remove the dependsOn-calls or disable the default template.
+Learn more about hierarchy templates: https://kotl.in/hierarchy-template
+
+w: ⚠️ Unused Kotlin Source Sets
+The Kotlin source set androidUnitTestRelease was configured but not added to any Kotlin compilation.
+Solution: You can add a source set to a target's compilation by connecting it with the compilation's default source set using 'dependsOn'.
+See https://kotl.in/connecting-source-sets
+
+w: ⚠️ Disabled Kotlin/Native Targets
+The following Kotlin/Native targets cannot be built on this machine and are disabled:
+iosArm64, iosSimulatorArm64
+Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+
+w: ⚠️ CInterop Commonization Disabled
+The project is using Kotlin Multiplatform with hierarchical structure and disabled 'cinterop commonization'
+
+'cinterop commonization' can be enabled in your 'gradle.properties'
+kotlin.mpp.enableCInteropCommonization=true
+
+To hide this message, add to your 'gradle.properties'
+kotlin.mpp.enableCInteropCommonization.nowarn=true 
+
+The following source sets are affected: 
+[iosMain]
+
+The following cinterops are affected: 
+[cinterop:compilation/compileKotlinIosArm64/rust, cinterop:compilation/compileKotlinIosArm64/uniffi, cinterop:compilation/compileKotlinIosSimulatorArm64/rust, cinterop:compilation/compileKotlinIosSimulatorArm64/uniffi]
+Solution: Please enable 'cinterop commonization' in your 'gradle.properties'
+See: https://kotlinlang.org/docs/mpp-share-on-platforms.html#use-native-libraries-in-the-hierarchical-structure
+
+
+> Configure project :plugin_interfaces
+w: ⚠️ Native task 'iosX64Test' is disabled
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (linux-x86_64).
+Reason: simulator tests require macOS
+Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+
+
+> Task :plugin_interfaces:jvmProcessResources NO-SOURCE
+> Task :plugin_interfaces:kmpPartiallyResolvedDependenciesChecker
+> Task :plugin_interfaces:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :plugin_interfaces:processJvmMainResources SKIPPED
+> Task :composeApp:installUniffiBindgen UP-TO-DATE
+
+> Task :composeApp:checkJvmMainComposeLibrariesCompatibility
+w: Skiko dependencies' versions are incompatible.
+    io.coil-kt.coil3:coil-core-jvm:3.5.0
+    \--- org.jetbrains.skiko:skiko:0.144.6 -> 0.150.2
+
+This may lead to compilation errors or unexpected behavior at runtime.
+Such version mismatch might be caused by dependency constraints in one of the included libraries.
+You can inspect resulted dependencies tree via `./gradlew :composeApp:dependencies  --configuration jvmRuntimeClasspath`.
+See more details in Gradle documentation: https://docs.gradle.org/current/userguide/viewing_debugging_dependencies.html#sec:listing-dependencies
+
+Note: Skiko is considered implementation detail in Compose Multiplatform and might be incompatible across versions.
+Please align Skiko dependencies to the same version. If possible, avoid direct Skiko references and use Compose APIs instead.
+
+
+> Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :plugin_interfaces:compileKotlinJvm UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForAndroidJvmMain NO-SOURCE
+> Task :plugin_interfaces:compileJvmMainJava NO-SOURCE
+> Task :plugin_interfaces:jvmMainClasses UP-TO-DATE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidJvmMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidJvmMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidJvmMain NO-SOURCE
+> Task :plugin_interfaces:jvmJar UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:mergeUniffiConfig UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForJvmMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForJvmMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:prepareComposeResourcesTaskForJvmMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForJvmMain NO-SOURCE
+> Task :composeApp:generateAppBuildInfo UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForCommonMain UP-TO-DATE
+> Task :composeApp:generateComposeResClass UP-TO-DATE
+> Task :composeApp:generateActualResourceCollectorsForJvmMain UP-TO-DATE
+> Task :composeApp:rustUpTargetAddAndroidArm64 UP-TO-DATE
+> Task :composeApp:generateVlcBundleLoader UP-TO-DATE
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain UP-TO-DATE
+> Task :composeApp:assembleJvmMainResources UP-TO-DATE
+> Task :composeApp:generateAppProperties UP-TO-DATE
+> Task :composeApp:jvmProcessResources UP-TO-DATE
+> Task :composeApp:processJvmMainResources SKIPPED
+
+> Task :composeApp:downloadVlcNatives
+VLC bundling is disabled (vlcjBundler.bundleVlc = false). The system VLC will be used.
+
+> Task :composeApp:prepareAppResources NO-SOURCE
+> Task :composeApp:rustUpTargetAddLinuxX64
+> Task :composeApp:cargoBuildAndroidArm64Debug UP-TO-DATE
+> Task :composeApp:buildUniffiBindings UP-TO-DATE
+> Task :composeApp:compileKotlinJvm UP-TO-DATE
+> Task :composeApp:compileJvmMainJava NO-SOURCE
+> Task :composeApp:jvmMainClasses UP-TO-DATE
+> Task :composeApp:jvmJar
+
+> Task :composeApp:cargoBuildLinuxX64Debug
+note: link against the following native artifacts when linking against this static library. The order and any duplication can be significant on some platforms
+
+
+
+
+> Task :composeApp:findDynamicLibrariesLinuxX64Debug
+> Task :composeApp:jarJvmRustRuntimeLinuxX64Debug
+
+> Task :composeApp:run
+Info: (koin) Started 104 definitions in 2.789 ms
+[00007fd210f140e0] vlcpulse audio output error: PulseAudio server connection failure: Connection refused
+[00007fd210f21dd0] vlcpulse audio output error: PulseAudio server connection failure: Connection refused
+Debug: (DiscordRpcService) Starting Discord RPC service
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Debug: (DeviceAudioPlayerQueue) Initializing DeviceAudioPlayerQueue
+Debug: (DeviceAudioPlayerQueue) Starting restoration of persisted queue state
+Debug: (DeviceAudioPlayerQueue) Current media item changed, persisting queue state
+Verbose: (DeviceAudioPlayerQueue) Skipping persist: still restoring persisted state
+Debug: (DeviceAudioPlayerQueue) No persisted state found
+Debug: (DeviceAudioPlayerQueue) Persisted queue state restoration completed
+Debug: (DeviceAudioPlayerQueue) Playlist changed, persisting queue state
+Debug: (DeviceAudioPlayerQueue) Persisting queue state: clearing state (queue is empty)
+Debug: (PluginManager) ziplineServices: flow restarting with generation=0, selectedPlugins=[AUDIO, LYRICS]
+Debug: (PluginManager) ziplineServices: creating service for NewPipe YouTube (c3b3e2b9)
+Debug: (LocalServer) Starting playback proxy port watcher
+Debug: (PluginManager) ziplineServices: creating service for LRCLib Lyrics (615c8631)
+Debug: (LocalServer) Observed server config change: port=14769, allowRemoteControl=false
+Debug: (LocalServer) Restarting playback proxy server on 127.0.0.1:14769 (remoteControl=false)
+Info: (LocalServer) Playback proxy server started at http://127.0.0.1:14769
+
+(java:11682): dbind-WARNING **: 22:20:25.288: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+Debug: (NavigationState) Current entries: Welcome
+Debug: (NavigationState) Current entries: Home
+Debug: (NavigationState) Current entries: Home

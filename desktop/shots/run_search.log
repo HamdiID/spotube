@@ -1,0 +1,152 @@
+Reusing configuration cache.
+> Task :plugin_interfaces:kmpPartiallyResolvedDependenciesChecker
+> Task :plugin_interfaces:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :plugin_interfaces:jvmProcessResources NO-SOURCE
+> Task :plugin_interfaces:processJvmMainResources SKIPPED
+> Task :composeApp:installUniffiBindgen UP-TO-DATE
+
+> Task :composeApp:checkJvmMainComposeLibrariesCompatibility
+w: Skiko dependencies' versions are incompatible.
+    io.coil-kt.coil3:coil-core-jvm:3.5.0
+    \--- org.jetbrains.skiko:skiko:0.144.6 -> 0.150.2
+
+This may lead to compilation errors or unexpected behavior at runtime.
+Such version mismatch might be caused by dependency constraints in one of the included libraries.
+You can inspect resulted dependencies tree via `./gradlew :composeApp:dependencies  --configuration jvmRuntimeClasspath`.
+See more details in Gradle documentation: https://docs.gradle.org/current/userguide/viewing_debugging_dependencies.html#sec:listing-dependencies
+
+Note: Skiko is considered implementation detail in Compose Multiplatform and might be incompatible across versions.
+Please align Skiko dependencies to the same version. If possible, avoid direct Skiko references and use Compose APIs instead.
+
+
+> Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :plugin_interfaces:compileKotlinJvm UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForAndroidJvmMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidJvmMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidJvmMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidJvmMain NO-SOURCE
+> Task :plugin_interfaces:compileJvmMainJava NO-SOURCE
+> Task :plugin_interfaces:jvmMainClasses UP-TO-DATE
+> Task :plugin_interfaces:jvmJar UP-TO-DATE
+> Task :composeApp:mergeUniffiConfig UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:convertXmlValueResourcesForJvmMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForJvmMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForJvmMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForJvmMain NO-SOURCE
+> Task :composeApp:rustUpTargetAddLinuxX64 UP-TO-DATE
+> Task :composeApp:generateAppBuildInfo UP-TO-DATE
+> Task :composeApp:generateComposeResClass UP-TO-DATE
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain UP-TO-DATE
+> Task :composeApp:generateVlcBundleLoader UP-TO-DATE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :composeApp:generateAppProperties UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForCommonMain UP-TO-DATE
+> Task :composeApp:assembleJvmMainResources UP-TO-DATE
+> Task :composeApp:generateActualResourceCollectorsForJvmMain UP-TO-DATE
+> Task :composeApp:jvmProcessResources UP-TO-DATE
+> Task :composeApp:processJvmMainResources SKIPPED
+> Task :composeApp:downloadVlcNatives UP-TO-DATE
+> Task :composeApp:prepareAppResources NO-SOURCE
+> Task :composeApp:rustUpTargetAddAndroidArm64 UP-TO-DATE
+> Task :composeApp:cargoBuildAndroidArm64Debug UP-TO-DATE
+> Task :composeApp:cargoBuildLinuxX64Debug UP-TO-DATE
+> Task :composeApp:findDynamicLibrariesLinuxX64Debug UP-TO-DATE
+> Task :composeApp:buildUniffiBindings UP-TO-DATE
+> Task :composeApp:jarJvmRustRuntimeLinuxX64Debug UP-TO-DATE
+> Task :composeApp:compileKotlinJvm UP-TO-DATE
+> Task :composeApp:compileJvmMainJava NO-SOURCE
+> Task :composeApp:jvmMainClasses UP-TO-DATE
+> Task :composeApp:jvmJar UP-TO-DATE
+
+> Task :composeApp:run
+Info: (koin) Started 104 definitions in 3.035 ms
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Debug: (PluginManager) ziplineServices: flow restarting with generation=0, selectedPlugins=[AUDIO, LYRICS]
+Debug: (PluginManager) ziplineServices: creating service for NewPipe YouTube (c3b3e2b9)
+Debug: (PluginManager) ziplineServices: creating service for LRCLib Lyrics (615c8631)
+[00007ff9611200b0] vlcpulse audio output error: PulseAudio server connection failure: Connection refused
+[00007ff9613183d0] vlcpulse audio output error: PulseAudio server connection failure: Connection refused
+Debug: (DeviceAudioPlayerQueue) Initializing DeviceAudioPlayerQueue
+Debug: (DeviceAudioPlayerQueue) Starting restoration of persisted queue state
+Debug: (DeviceAudioPlayerQueue) Playlist changed, persisting queue state
+Debug: (DeviceAudioPlayerQueue) Current media item changed, persisting queue state
+Debug: (DeviceAudioPlayerQueue) No persisted state found
+Debug: (DeviceAudioPlayerQueue) Persisted queue state restoration completed
+Debug: (DeviceAudioPlayerQueue) Persisting queue state: clearing state (queue is empty)
+Debug: (DeviceAudioPlayerQueue) Persisting queue state: clearing state (queue is empty)
+Debug: (LocalServer) Starting playback proxy port watcher
+Debug: (LocalServer) Observed server config change: port=14769, allowRemoteControl=false
+Debug: (LocalServer) Restarting playback proxy server on 127.0.0.1:14769 (remoteControl=false)
+Debug: (DiscordRpcService) Starting Discord RPC service
+Info: (LocalServer) Playback proxy server started at http://127.0.0.1:14769
+
+(java:12025): dbind-WARNING **: 22:21:40.385: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+Warn: (AppUpdateService) Failed to check for app updates
+io.ktor.serialization.JsonConvertException: Illegal input: Unexpected JSON token at offset 0: Expected start of the array '[', but had '{' instead at path: $
+JSON input: {"message":"API rate limit exc.....
+	at io.ktor.serialization.kotlinx.KotlinxSerializationConverter.deserialize(KotlinxSerializationConverter.kt:78)
+	at io.ktor.serialization.ContentConverterKt$deserialize$$inlined$map$1$2.emit(Emitters.kt:218)
+	at kotlinx.coroutines.flow.FlowKt__BuildersKt$asFlow$$inlined$unsafeFlow$3.collect(SafeCollector.common.kt:114)
+	at io.ktor.serialization.ContentConverterKt$deserialize$$inlined$map$1.collect(SafeCollector.common.kt:112)
+	at kotlinx.coroutines.flow.FlowKt__ReduceKt.firstOrNull(Reduce.kt:247)
+	at kotlinx.coroutines.flow.FlowKt.firstOrNull(Unknown Source)
+	at io.ktor.serialization.ContentConverterKt.deserialize(ContentConverter.kt:113)
+	at io.ktor.client.plugins.contentnegotiation.ContentNegotiationKt.ContentNegotiation$lambda$0$convertResponse(ContentNegotiation.kt:284)
+	at io.ktor.client.plugins.contentnegotiation.ContentNegotiationKt.access$ContentNegotiation$lambda$0$convertResponse(ContentNegotiation.kt:1)
+	at io.ktor.client.plugins.contentnegotiation.ContentNegotiationKt$ContentNegotiation$2$2.invokeSuspend(ContentNegotiation.kt:299)
+	at io.ktor.client.plugins.contentnegotiation.ContentNegotiationKt$ContentNegotiation$2$2.invoke(ContentNegotiation.kt)
+	at io.ktor.client.plugins.contentnegotiation.ContentNegotiationKt$ContentNegotiation$2$2.invoke(ContentNegotiation.kt)
+	at io.ktor.client.plugins.api.TransformResponseBodyHook$install$1.invokeSuspend(KtorCallContexts.kt:113)
+	at io.ktor.client.plugins.api.TransformResponseBodyHook$install$1.invoke(KtorCallContexts.kt)
+	at io.ktor.client.plugins.api.TransformResponseBodyHook$install$1.invoke(KtorCallContexts.kt)
+	at io.ktor.util.pipeline.DebugPipelineContext.proceedLoop(DebugPipelineContext.kt:79)
+	at io.ktor.util.pipeline.DebugPipelineContext.proceed(DebugPipelineContext.kt:57)
+	at io.ktor.client.HttpClient$4.invokeSuspend(HttpClient.kt:1406)
+	at io.ktor.client.HttpClient$4.invoke(HttpClient.kt)
+	at io.ktor.client.HttpClient$4.invoke(HttpClient.kt)
+	at io.ktor.util.pipeline.DebugPipelineContext.proceedLoop(DebugPipelineContext.kt:79)
+	at io.ktor.util.pipeline.DebugPipelineContext.proceed(DebugPipelineContext.kt:57)
+	at io.ktor.client.plugins.ReceiveError$install$1.invokeSuspend(HttpCallValidator.kt:180)
+	at io.ktor.client.plugins.ReceiveError$install$1.invoke(HttpCallValidator.kt)
+	at io.ktor.client.plugins.ReceiveError$install$1.invoke(HttpCallValidator.kt)
+	at io.ktor.util.pipeline.DebugPipelineContext.proceedLoop(DebugPipelineContext.kt:79)
+	at io.ktor.util.pipeline.DebugPipelineContext.proceed(DebugPipelineContext.kt:57)
+	at io.ktor.util.pipeline.DebugPipelineContext.execute$ktor_utils(DebugPipelineContext.kt:63)
+	at io.ktor.util.pipeline.Pipeline.execute(Pipeline.kt:92)
+	at io.ktor.client.call.HttpClientCall.bodyNullable(HttpClientCall.kt:99)
+	at org.spotube.spotube.modules.update.AppUpdateService.checkForUpdate(AppUpdateService.kt:129)
+	at org.spotube.spotube.modules.update.AppUpdateService.access$checkForUpdate(AppUpdateService.kt:47)
+	at org.spotube.spotube.modules.update.AppUpdateService$checkForUpdate$1.invokeSuspend(AppUpdateService.kt)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:807)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+Caused by: kotlinx.serialization.json.JsonDecodingException: Unexpected JSON token at offset 0: Expected start of the array '[', but had '{' instead at path: $
+JSON input: {"message":"API rate limit exc.....
+	at kotlinx.serialization.json.internal.JsonExceptionsKt.decodingExceptionOf(JsonExceptions.kt:48)
+	at kotlinx.serialization.json.internal.AbstractJsonLexer.fail(AbstractJsonLexer.kt:583)
+	at kotlinx.serialization.json.internal.AbstractJsonLexer.fail$default(AbstractJsonLexer.kt:582)
+	at kotlinx.serialization.json.internal.AbstractJsonLexer.unexpectedToken(AbstractJsonLexer.kt:785)
+	at kotlinx.serialization.json.internal.StringJsonLexer.consumeNextToken(StringJsonLexer.kt:81)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.beginStructure(StreamingJsonDecoder.kt:102)
+	at kotlinx.serialization.internal.AbstractCollectionSerializer.merge(CollectionSerializers.kt:29)
+	at kotlinx.serialization.internal.AbstractCollectionSerializer.deserialize(CollectionSerializers.kt:43)
+	at kotlinx.serialization.json.internal.StreamingJsonDecoder.decodeSerializableValue(StreamingJsonDecoder.kt:69)
+	at kotlinx.serialization.json.Json.decodeFromString(Json.kt:149)
+	at io.ktor.serialization.kotlinx.KotlinxSerializationConverter.deserialize(KotlinxSerializationConverter.kt:68)
+	... 38 more
+
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+Debug: (NavigationState) Current entries: Home
+Debug: (NavigationState) Current entries: Home
+Debug: (NavigationState) Current entries: Home
+Debug: (Navigator) Navigating to top-level route: Search, cleared back stack: true
+Debug: (NavigationState) Current entries: Home->Search
