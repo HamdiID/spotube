@@ -1138,4 +1138,7 @@
     <string name="home_filter_all">All</string>
     <string name="nav_create">Create</string>
     <string name="home_profile_content_description">Profile and settings</string>
+    <string name="offline_title">You\'re offline</string>
+    <string name="offline_description">Your downloads are still here. Check your connection to see everything else.</string>
+    <string name="offline_go_to_downloads">Go to Downloads</string>
 </resources>

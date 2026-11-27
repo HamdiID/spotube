@@ -70,6 +70,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.AlertCircle
+import compose.icons.feathericons.WifiOff
 import compose.icons.feathericons.Copy
 import compose.icons.feathericons.Maximize2
 import compose.icons.feathericons.RefreshCw
@@ -82,6 +83,10 @@ fun ErrorDisplay(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
     authViewModel: MetadataAuthViewModel = koinViewModel()) {
+    if (isOfflineError(errorMessage)) {
+        OfflineDisplay(onRetry = onRetry, modifier = modifier)
+        return
+    }
     val authState by authViewModel.uiState.collectAsStateWithLifecycle()
     if (authState.loginRequired) {
         LoginRequiredDisplay(
@@ -262,5 +267,72 @@ private fun ErrorLogDialogPreview() {
         ErrorLogDialog(
             errorMessage = "This is an error message",
             onDismiss = {})
+    }
+}
+
+
+private val offlineMarkers = listOf(
+    "NSURLErrorDomain Code=-1009", "Code=-1009", "appears to be offline", "No network route",
+    "Code=-1020", "Code=-1004", "Code=-1003", "UnknownHostException", "Unable to resolve host",
+    "No address associated with hostname", "Network is unreachable", "ConnectException"
+)
+
+/** True when the failure only means there is no internet connection. */
+fun isOfflineError(message: String): Boolean = offlineMarkers.any { message.contains(it, ignoreCase = true) }
+
+/** Spotify-style offline page: no stack trace, a way to your downloads, and a retry. */
+@Composable
+fun OfflineDisplay(onRetry: () -> Unit, modifier: Modifier = Modifier) {
+    val navigationCommands: org.spotube.spotube.core.navigation.NavigationCommands = org.koin.compose.koinInject()
+    val libraryState: org.spotube.spotube.modules.library.LibraryState = org.koin.compose.koinInject()
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp, vertical = 48.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        MillenniumIcon(
+            imageVector = FeatherIcons.WifiOff,
+            contentDescription = null,
+            modifier = Modifier.size(56.dp),
+            tint = org.spotube.spotube.core.ui.spotify.Sp.SubText)
+        Text(
+            text = stringResource(Res.string.offline_title),
+            style = AppTheme.typography.headlineSmall,
+            color = org.spotube.spotube.core.ui.spotify.Sp.Text,
+            textAlign = TextAlign.Center)
+        Text(
+            text = stringResource(Res.string.offline_description),
+            style = AppTheme.typography.bodyMedium,
+            color = org.spotube.spotube.core.ui.spotify.Sp.SubText,
+            textAlign = TextAlign.Center)
+        androidx.compose.foundation.layout.Spacer(Modifier.height(6.dp))
+        Box(
+            modifier = Modifier
+                .height(48.dp)
+                .clip(androidx.compose.foundation.shape.RoundedCornerShape(24.dp))
+                .background(org.spotube.spotube.core.ui.spotify.Sp.Text)
+                .then(org.spotube.spotube.core.ui.spotify.bouncyClickModifier {
+                    libraryState.onTabSelected(org.spotube.spotube.modules.library.LibraryTab.Downloads)
+                    navigationCommands.navigateTo(org.spotube.spotube.core.navigation.Routes.Library)
+                })
+                .padding(horizontal = 28.dp),
+            contentAlignment = Alignment.Center) {
+            Text(
+                text = stringResource(Res.string.offline_go_to_downloads),
+                style = AppTheme.typography.titleSmall,
+                color = org.spotube.spotube.core.ui.spotify.Sp.Black)
+        }
+        Box(
+            modifier = Modifier
+                .height(44.dp)
+                .then(org.spotube.spotube.core.ui.spotify.bouncyClickModifier(onRetry))
+                .padding(horizontal = 20.dp),
+            contentAlignment = Alignment.Center) {
+            Text(
+                text = stringResource(Res.string.common_retry),
+                style = AppTheme.typography.titleSmall,
+                color = org.spotube.spotube.core.ui.spotify.Sp.Text)
+        }
     }
 }

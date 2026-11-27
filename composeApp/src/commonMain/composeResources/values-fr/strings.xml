@@ -936,4 +936,7 @@
     <string name="home_filter_all">Tout</string>
     <string name="nav_create">Créer</string>
     <string name="home_profile_content_description">Profil et réglages</string>
+    <string name="offline_title">Vous êtes hors ligne</string>
+    <string name="offline_description">Vos téléchargements sont toujours là. Vérifiez votre connexion pour voir le reste.</string>
+    <string name="offline_go_to_downloads">Voir mes téléchargements</string>
 </resources>

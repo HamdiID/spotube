@@ -627,3 +627,7 @@ fun Modifier.liquidGlass(
             shape = shape
         )
 }
+
+
+/** Same as [bouncyClick], usable inside `Modifier.then(...)`. */
+fun bouncyClickModifier(onClick: () -> Unit): Modifier = Modifier.bouncyClick(onClick = onClick)
