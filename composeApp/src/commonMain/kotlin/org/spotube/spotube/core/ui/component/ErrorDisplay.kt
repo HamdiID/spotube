@@ -306,6 +306,7 @@ fun OfflineDisplay(onRetry: () -> Unit, modifier: Modifier = Modifier) {
             style = AppTheme.typography.bodyMedium,
             color = org.spotube.spotube.core.ui.spotify.Sp.SubText,
             textAlign = TextAlign.Center)
+        OfflinePlaylistsList(onOpen = { navigationCommands.navigateTo(org.spotube.spotube.core.navigation.Routes.Playlist(it)) })
         androidx.compose.foundation.layout.Spacer(Modifier.height(6.dp))
         Box(
             modifier = Modifier
@@ -333,6 +334,57 @@ fun OfflineDisplay(onRetry: () -> Unit, modifier: Modifier = Modifier) {
                 text = stringResource(Res.string.common_retry),
                 style = AppTheme.typography.titleSmall,
                 color = org.spotube.spotube.core.ui.spotify.Sp.Text)
+        }
+    }
+}
+
+
+/** Playlists saved for offline use that have at least one downloaded song. */
+@Composable
+private fun OfflinePlaylistsList(onOpen: (String) -> Unit) {
+    val downloadsViewModel: org.spotube.spotube.modules.downloads.DownloadsViewModel = koinViewModel()
+    val downloaded by downloadsViewModel.downloadedFileNames.collectAsStateWithLifecycle()
+    val saved by org.spotube.spotube.core.offline.OfflineLibrary.playlists.collectAsStateWithLifecycle()
+    val rows = saved.values
+        .map { it to it.tracks.count { t -> downloadsViewModel.downloadBaseName(t) in downloaded } }
+        .filter { it.second > 0 }
+        .sortedByDescending { it.second }
+    if (rows.isEmpty()) return
+    Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = stringResource(Res.string.offline_downloaded_playlists),
+            style = AppTheme.typography.titleMedium,
+            color = org.spotube.spotube.core.ui.spotify.Sp.Text)
+        rows.forEach { (item, count) ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(6.dp))
+                    .then(org.spotube.spotube.core.ui.spotify.bouncyClickModifier { onOpen(item.playlist.id) })
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                coil3.compose.AsyncImage(
+                    model = item.playlist.thumbnails.firstOrNull()?.url,
+                    contentDescription = item.playlist.title,
+                    contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                    modifier = Modifier
+                        .size(52.dp)
+                        .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
+                        .background(org.spotube.spotube.core.ui.spotify.Sp.Highlight))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = item.playlist.title,
+                        style = AppTheme.typography.titleSmall,
+                        color = org.spotube.spotube.core.ui.spotify.Sp.Text,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis)
+                    Text(
+                        text = stringResource(Res.string.offline_downloaded_count, count),
+                        style = AppTheme.typography.bodySmall,
+                        color = org.spotube.spotube.core.ui.spotify.Sp.Green)
+                }
+            }
         }
     }
 }

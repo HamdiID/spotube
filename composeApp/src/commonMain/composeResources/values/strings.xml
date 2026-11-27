@@ -1142,4 +1142,6 @@
     <string name="offline_description">Your downloads are still here. Check your connection to see everything else.</string>
     <string name="offline_go_to_downloads">Go to Downloads</string>
     <string name="library_local_shuffle_folder">Shuffle play</string>
+    <string name="offline_downloaded_playlists">Downloaded playlists</string>
+    <string name="offline_downloaded_count">%1$d downloaded</string>
 </resources>

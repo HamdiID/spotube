@@ -148,7 +148,46 @@ class PlaylistViewModel(
             blacklistedArtistIds = blacklistedArtists)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TrackOptionsContext())
 
+    /** True when this page shows the saved offline copy; play buttons then use downloaded files only. */
+    private var offlineMode = false
+
+    private suspend fun showOfflineCopy(): Boolean {
+        val saved = org.spotube.spotube.core.offline.OfflineLibrary.get(playlistId) ?: return false
+        offlineMode = true
+        _state.value = PlaylistScreenState.Data.Loaded(playlist = saved.playlist, tracks = saved.tracks)
+        return true
+    }
+
+    private fun rememberForOffline() {
+        val data = _state.value as? PlaylistScreenState.Data ?: return
+        val playlist = data.playlist ?: return
+        if (!offlineMode) org.spotube.spotube.core.offline.OfflineLibrary.remember(playlist, data.tracks)
+    }
+
+    /** Spotify offline: play this playlist's downloaded songs straight from their files. */
+    private fun playOffline(startTrack: MetadataTrack? = null, shuffle: Boolean = false) {
+        val tracks = (_state.value as? PlaylistScreenState.Data)?.tracks ?: return
+        viewModelScope.launch {
+            var entries = tracks.mapNotNull { track ->
+                downloadManager.downloadedFilePath(track)?.let { path -> track to path }
+            }
+            if (entries.isEmpty()) return@launch
+            if (shuffle) entries = entries.shuffled()
+            val start = startTrack?.let { st -> entries.indexOfFirst { it.first.id == st.id } }?.coerceAtLeast(0) ?: 0
+            audioPlayerQueue.load(
+                entries = entries.map { (track, path) -> QueueEntry.StreamingTrack(track = track, url = path) },
+                autoPlay = true,
+                startPosition = start,
+                collectionEntry = org.spotube.spotube.core.audioplayer.QueueCollectionEntry.Playlist(playlistId))
+        }
+    }
+
     init {
+        viewModelScope.launch {
+            // No plugin answer (offline): fall back to the saved copy.
+            kotlinx.coroutines.delay(3500)
+            if (_state.value is PlaylistScreenState.Loading) showOfflineCopy()
+        }
         viewModelScope.launch {
             repository.pluginManager.selectedMetadataPlugin
                 .filterNotNull()
@@ -186,9 +225,13 @@ class PlaylistViewModel(
             isSaved = playlistInfo?.second ?: false,
             tracks = tracksResult?.items ?: emptyList(),
             nextPagination = tracksResult?.nextPagination)
+        offlineMode = false
+        rememberForOffline()
     }.onFailure { e ->
         logger.e(e) { "Failed to load playlist" }
-        _state.value = PlaylistScreenState.Error(e.message ?: getString(Res.string.common_unknown_error))
+        if (!showOfflineCopy()) {
+            _state.value = PlaylistScreenState.Error(e.message ?: getString(Res.string.common_unknown_error))
+        }
     }
 
     suspend fun loadMoreTracks() = runCatching {
@@ -204,6 +247,7 @@ class PlaylistViewModel(
                 tracks = currentState.tracks + (result?.items ?: emptyList()),
                 nextPagination = result?.nextPagination,
                 isSaving = currentState.isSaving)
+            rememberForOffline()
         }
     }.onFailure { e ->
         logger.e(e) { "Failed to load more tracks" }
@@ -245,11 +289,13 @@ class PlaylistViewModel(
     }
 
     fun playPlaylist() {
+        if (offlineMode) return playOffline()
         val title = (_state.value as? PlaylistScreenState.Data)?.playlist?.title ?: "Playlist"
         remotePlaybackController.requestCollectionPlay(RemoteCollectionType.Playlist, playlistId, title)
     }
 
     fun shufflePlayPlaylist() {
+        if (offlineMode) return playOffline(shuffle = true)
         val title = (_state.value as? PlaylistScreenState.Data)?.playlist?.title ?: "Playlist"
         remotePlaybackController.requestCollectionPlay(RemoteCollectionType.Playlist, playlistId, title, shuffle = true)
     }
@@ -265,6 +311,7 @@ class PlaylistViewModel(
     }
 
     fun playPlaylistFromTrack(track: MetadataTrack) {
+        if (offlineMode) return playOffline(startTrack = track)
         val title = (_state.value as? PlaylistScreenState.Data)?.playlist?.title ?: "Playlist"
         remotePlaybackController.requestCollectionPlay(
             type = RemoteCollectionType.Playlist,
