@@ -68,27 +68,27 @@ class PlaylistRepository(
 
     suspend fun getPlaylistInfo(playlistId: String) = plugin?.let { plugin ->
         playlistInfoCache.get(playlistId) {
-            pluginManager.withScope {
+            org.spotube.spotube.core.offline.OfflineStore.cached("playlist_info_$playlistId") { pluginManager.withScope {
                 plugin.use {
                     val playlist = metadataPlaylistAPI.getPlaylist(playlistId)
                     val isSaved = libraryRepository.isSavedPlaylists(listOf(playlistId)).firstOrNull() ?: false
                     playlist to isSaved
                 }
-            }
+            } }
         }
     }
 
     suspend fun getPlaylistTracks(playlistId: String, paginationStrategy: PaginationStrategy? = null) =
         plugin?.let { plugin ->
             playlistTracksCache.get(playlistId to (paginationStrategy ?: PaginationStrategy.Offset(0, 20))) {
-                pluginManager.withScope {
+                org.spotube.spotube.core.offline.OfflineStore.cached("playlist_tracks_${playlistId}_${paginationStrategy ?: "first"}") { pluginManager.withScope {
                     plugin.use {
                         metadataPlaylistAPI.getPlaylistTracks(
                             id = playlistId,
                             pagination = paginationStrategy
                         )
                     }
-                }
+                } }
             }
         }
 

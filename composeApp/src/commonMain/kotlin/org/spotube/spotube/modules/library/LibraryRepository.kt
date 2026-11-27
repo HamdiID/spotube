@@ -93,13 +93,13 @@ class LibraryRepository(
             playlistCache.get(
                 key = paginationStrategy ?: PaginationStrategy.Offset(0, 20)
             ) {
-                pluginManager.withScope {
+                org.spotube.spotube.core.offline.OfflineStore.cached("library_playlists_${paginationStrategy ?: "first"}") { pluginManager.withScope {
                     plugin.use {
                         val result = metadataPlaylistAPI.savedPlaylists(paginationStrategy)
                         savedPlaylistIds.value += result.items.map { it.id }.toSet()
                         result
                     }
-                }
+                } }
             }
         }
 
@@ -108,13 +108,13 @@ class LibraryRepository(
             albumCache.get(
                 key = paginationStrategy ?: PaginationStrategy.Offset(0, 20)
             ) {
-                pluginManager.withScope {
+                org.spotube.spotube.core.offline.OfflineStore.cached("library_albums_${paginationStrategy ?: "first"}") { pluginManager.withScope {
                     plugin.use {
                         val result = metadataAlbumAPI.savedAlbums(paginationStrategy)
                         savedAlbumIds.value += result.items.map { it.id }.toSet()
                         result
                     }
-                }
+                } }
             }
         }
 
@@ -123,13 +123,13 @@ class LibraryRepository(
             artistCache.get(
                 key = paginationStrategy ?: PaginationStrategy.Offset(0, 20)
             ) {
-                pluginManager.withScope {
+                org.spotube.spotube.core.offline.OfflineStore.cached("library_artists_${paginationStrategy ?: "first"}") { pluginManager.withScope {
                     plugin.use {
                         val result = metadataArtistAPI.savedArtists(paginationStrategy)
                         savedArtistIds.value += result.items.map { it.id }.toSet()
                         result
                     }
-                }
+                } }
             }
         }
 

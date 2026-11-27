@@ -697,10 +697,13 @@ private fun TrackListRow(
                     DownloadedBadge(done = downloadState == 2)
                     Spacer(Modifier.width(5.dp))
                 }
-                ArtistChips(
-                    artists = track.artists,
-                    onArtistClick = onArtistClick,
-                    onArtistsOverflowClick = onArtistsOverflowClick)
+                // Plain text like Spotify: tapping the row plays the song, never opens the artist.
+                Text(
+                    text = track.artists.joinToString(", ") { it.name },
+                    style = androidx.compose.ui.text.TextStyle(fontSize = 13.sp, lineHeight = 17.sp),
+                    color = org.spotube.spotube.core.ui.spotify.Sp.SubText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis)
             }
         },
         leading = {

@@ -134,6 +134,15 @@ class DownloadManager(
     fun downloadBaseName(track: MetadataTrack): String =
         "${track.artists.joinToString(", ") { it.name }.sanitizeFilename()} - ${track.title.sanitizeFilename()}"
 
+    /** Path of this track's downloaded file, if there is one (used to play offline). */
+    fun downloadedFilePath(track: MetadataTrack): String? = runCatching {
+        val base = downloadBaseName(track)
+        if (downloadedNames.value.isNotEmpty() && base !in downloadedNames.value) return@runCatching null
+        val dir = resolveDownloadDir()
+        if (!fileSystem.exists(dir)) return@runCatching null
+        fileSystem.list(dir).firstOrNull { it.name.substringBeforeLast('.') == base }?.toString()
+    }.getOrNull()
+
     private fun refreshDownloadedNames() {
         downloadedNames.value = runCatching {
             val dir = resolveDownloadDir()

@@ -86,12 +86,12 @@ class SavedTracksRepository(
         authPlugin?.let { plugin ->
             val strategy = paginationStrategy ?: PaginationStrategy.Offset(0, 50)
             savedTracksCache.get(strategy) {
-                val tracks = pluginManager.withScope {
+                val tracks = org.spotube.spotube.core.offline.OfflineStore.cached("liked_tracks_${paginationStrategy ?: "first"}") { pluginManager.withScope {
                     plugin.use {
                         val tracks = metadataTrackAPI.savedTracks(paginationStrategy)
                         tracks
                     }
-                }
+                } }
                 savedTrackIds.value += tracks.items.map { it.id }.toSet()
                 tracks
             }

@@ -515,7 +515,13 @@ class DeviceAudioPlayerQueue(
     private suspend fun QueueEntry.toMediaItem(): MediaItem? {
         return when (this) {
             is QueueEntry.StreamingTrack -> {
-                val resolvedUrl = url.ifBlank { buildStreamingUrl(track.id, protocol) }
+                // Downloaded songs play straight from the file, so they work offline.
+                val localFile = if (url.isBlank()) {
+                    runCatching {
+                        getKoin().get<org.spotube.spotube.modules.downloads.DownloadManager>().downloadedFilePath(track)
+                    }.getOrNull()
+                } else null
+                val resolvedUrl = localFile ?: url.ifBlank { buildStreamingUrl(track.id, protocol) }
                 if (resolvedUrl.isBlank()) return null
                 MediaItem(
                     title = track.title,
@@ -524,7 +530,7 @@ class DeviceAudioPlayerQueue(
                     duration = track.durationMs.milliseconds,
                     coverURL = artworkUrl.orEmpty(),
                     url = resolvedUrl,
-                    protocol = protocol)
+                    protocol = if (localFile != null) StreamProtocol.PROGRESSIVE else protocol)
             }
 
             is QueueEntry.LocalTrack -> {

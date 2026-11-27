@@ -69,27 +69,27 @@ class AlbumRepository(
 
     suspend fun getAlbumInfo(albumId: String) = plugin?.let { plugin ->
         albumInfoCache.get(albumId) {
-            pluginManager.withScope {
+            org.spotube.spotube.core.offline.OfflineStore.cached("album_info_$albumId") { pluginManager.withScope {
                 plugin.use {
                     val album = metadataAlbumAPI.getAlbum(albumId)
                     val isSaved = libraryRepository.isSavedAlbums(listOf(albumId)).firstOrNull() ?: false
                     album to isSaved
                 }
-            }
+            } }
         }
     }
 
     suspend fun getAlbumTracks(albumId: String, paginationStrategy: PaginationStrategy? = null) =
         authPlugin?.let { plugin ->
             albumTracksCache.get(albumId to (paginationStrategy ?: PaginationStrategy.Offset(0, 20))) {
-                pluginManager.withScope {
+                org.spotube.spotube.core.offline.OfflineStore.cached("album_tracks_${albumId}_${paginationStrategy ?: "first"}") { pluginManager.withScope {
                     plugin.use {
                         metadataAlbumAPI.getAlbumTracks(
                             id = albumId,
                             pagination = paginationStrategy
                         )
                     }
-                }
+                } }
             }
         }
 
