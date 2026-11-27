@@ -1,0 +1,300 @@
+2026-11-27 22:42:52.898 Df Spotube[58892:26651] [com.apple.WebKit:Media] PlaybackSessionManagerProxy::~PlaybackSessionManagerProxy(735761204)
+2026-11-27 22:42:52.901 Df Spotube[58892:26651] [com.apple.WebKit:ProcessCapabilities] 0x102113018 - [pageProxyID=5, webPageID=6, PID=58970] WebPageProxy::setMediaCapability: clearing media capability
+2026-11-27 22:42:52.902 Df Spotube[58892:26651] [com.apple.WebKit:Process] 0x11f0b80c0 - [PID=58970] WebProcessProxy::removeWebPage: webPage=0x102113018, pageProxyID=5, webPageID=6
+2026-11-27 22:42:52.902 Df Spotube[58892:26651] [com.apple.WebKit:Process] 0x11f0b80c0 - [PID=58970] WebProcessProxy::canTerminateAuxiliaryProcess: returns false (pageCount=0, provisionalPageCount=0, suspendedPageCount=0, m_isInProcessCache=0, m_shutdownPreventingScopeCounter=1)
+2026-11-27 22:42:52.904 Df Spotube[58892:26651] [com.apple.WebKit:Loading] 0x102113018 - [pageProxyID=5, webPageID=6, PID=58970] WebPageProxy::destructor:
+2026-11-27 22:42:52.905 Df Spotube[58892:26651] [com.apple.WebKit:ViewState] 0x11f0b0100 - ~ApplicationStateTracker
+2026-11-27 22:42:52.905 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f1ac0e0 - ProcessStateMonitor::ProcessStateMonitor
+2026-11-27 22:42:52.905 Df Spotube[58892:26651] [com.apple.runningboard:monitor] Updating configuration of monitor M58892-1
+2026-11-27 22:42:52.905 A  Spotube[58892:266f6] (RunningBoardServices) observedProcessStatesDidChange
+2026-11-27 22:42:52.905 Df Spotube[58892:26651] [com.apple.WebKit:Process] 0x11f0b80c0 - [PID=58970] WebProcessProxy::canTerminateAuxiliaryProcess: returns false (pageCount=0, provisionalPageCount=0, suspendedPageCount=0, m_isInProcessCache=0, m_shutdownPreventingScopeCounter=1)
+2026-11-27 22:42:52.906 Df Spotube[58892:26651] [com.apple.WebKit:Process] 0x11f0b80c0 - [PID=58970] WebProcessProxy::canTerminateAuxiliaryProcess: returns true
+2026-11-27 22:42:52.906 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSwapping] 0x11f0640e0 - [PID=58970] WebProcessCache::canCacheProcess: Not caching process because the cache has no capacity
+2026-11-27 22:42:52.906 Df Spotube[58892:26651] [com.apple.WebKit:Process] 0x11f0b80c0 - [PID=58970] WebProcessProxy::shutDown:
+2026-11-27 22:42:52.906 Df Spotube[58892:26651] [com.apple.WebKit:Process] AssertionCapability::AssertionCapability: taking assertion Background
+2026-11-27 22:42:52.906 Df Spotube[58892:266f6] [com.apple.runningboard:process] Hit the server for a process handle b6f7eb60000e60c that resolved to: [app<org.spotube.spotube.Spotube((null))>:58892]
+2026-11-27 22:42:52.906 Df Spotube[58892:266f6] [com.apple.runningboard:monitor] Received state update for 58892 (app<org.spotube.spotube.Spotube((null))>, unknown-NotVisible
+2026-11-27 22:42:52.906 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x600001791e00 - WKProcessAssertionBackgroundTaskManager: beginBackgroundTaskWithName
+2026-11-27 22:42:52.906 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] WKProcessAssertionBackgroundTaskManager: Took a FinishTaskInterruptable assertion for own process
+2026-11-27 22:42:52.907 Df Spotube[58892:26651] [com.apple.WebKit:Process] 0x11f0b80c0 - [PID=58970] WebProcessProxy::processWillShutDown:
+2026-11-27 22:42:52.907 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f0b8150 - [PID=58970] ProcessThrottler::didDisconnectFromProcess:
+2026-11-27 22:42:52.907 Df Spotube[58892:266f2] [com.apple.WebKit:ProcessSuspension] 0x11f13c0c0 - ProcessAssertion::acquireSync Trying to take RBS assertion 'XPCConnectionTerminationWatchdog' for process with PID=58970
+2026-11-27 22:42:52.912 Df Spotube[58892:266f2] [com.apple.WebKit:ProcessSuspension] 0x11f13c0c0 - ProcessAssertion() Successfully granted capability
+2026-11-27 22:42:52.915 Df Spotube[58892:26651] [com.apple.WebKit:Process] 0x11f0b80c0 - [PID=58970] WebProcessProxy::destructor:
+2026-11-27 22:42:52.917 Df Spotube[58892:26651] [com.apple.WebKit:BackForwardCache] WebBackForwardCache::clear
+2026-11-27 22:42:52.917 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f0b8150 - [PID=58970] ProcessThrottler::didDisconnectFromProcess:
+2026-11-27 22:42:52.937 Df Spotube[58892:26651] [com.apple.extensionkit:launch] Assertion for extension process 'ExtensionProcess: bundleID: com.apple.WebKit.WebContent instance ID: Optional([_EXExtensionInstanceIdentifier: 257A0536-38F7-4A48-8184-4F9CA08E6DE4]) pid: 58970' invalidated
+2026-11-27 22:42:52.939 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f0b8150 - [PID=0] ProcessThrottler::invalidateAllActivities: BEGIN (foregroundActivityCount: 0, backgroundActivityCount: 0)
+2026-11-27 22:42:52.939 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f0b8150 - [PID=0] ProcessThrottler::invalidateAllActivities: END
+2026-11-27 22:42:52.939 Df Spotube[58892:26651] [com.apple.xpc:connection] [0x100f7a5d0] invalidated after the last release of the connection object
+2026-11-27 22:42:52.952 A  Spotube[58892:266f6] (RunningBoardServices) assertionsDidInvalidate
+2026-11-27 22:42:52.953 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f13c0c0 - ProcessAssertion: RBS Background assertion for process with PID=58970 was invalidated
+2026-11-27 22:42:52.953 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f13c0c0 - ProcessAssertion::processAssertionWasInvalidated() PID=58970
+2026-11-27 22:42:52.953 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x600001791e00 - WKProcessAssertionBackgroundTaskManager: endBackgroundTask
+2026-11-27 22:42:52.953 A  Spotube[58892:266f2] (RunningBoardServices) processDidExit
+2026-11-27 22:42:52.953 Df Spotube[58892:266f2] [com.apple.runningboard:process] Firing exit handlers for 58970 with context <RBSProcessExitContext| specific, status:<RBSProcessExitStatus| domain:runningboard(15) code:0>>
+2026-11-27 22:42:52.953 Df Spotube[58892:266f2] [com.apple.runningboard:process] Calling process death completion block for handle [xpcservice<com.apple.WebKit.WebContent([app<org.spotube.spotube.Spotube((null))>:58892])>{vt hash: 71395982}[uuid:257A0536-38F7-4A48-8184-4F9CA08E6DE4]{definition:com.apple.WebKit.WebContent[extension][client]}:58970]
+2026-11-27 22:42:53.030 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:53.030 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:53.031 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:53.572 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:53.572 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:53.572 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:54.126 Df Spotube[58892:266e4] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:54.127 Df Spotube[58892:266e4] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:54.127 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:54.652 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:54.652 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:54.652 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:55.193 Df Spotube[58892:266e4] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:55.194 Df Spotube[58892:266e4] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:55.194 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:55.747 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:55.747 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:55.747 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:56.262 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:56.262 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:56.262 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:56.395 Df Spotube[58892:26651] [com.apple.WebKit:Process] 0x11f1141e0 - GPUProcessProxy::processIsReadyToExit:
+2026-11-27 22:42:56.395 Df Spotube[58892:26651] [com.apple.WebKit:Process] AuxiliaryProcessProxy::terminate: PID=58972
+2026-11-27 22:42:56.395 Df Spotube[58892:26651] [com.apple.WebKit:Process] AssertionCapability::AssertionCapability: taking assertion Background
+2026-11-27 22:42:56.395 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x600001791e00 - WKProcessAssertionBackgroundTaskManager: beginBackgroundTaskWithName
+2026-11-27 22:42:56.395 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] WKProcessAssertionBackgroundTaskManager: Took a FinishTaskInterruptable assertion for own process
+2026-11-27 22:42:56.395 Df Spotube[58892:266fb] [com.apple.WebKit:ProcessSuspension] 0x11f13c180 - ProcessAssertion::acquireSync Trying to take RBS assertion 'XPCConnectionTerminationWatchdog' for process with PID=58972
+2026-11-27 22:42:56.395 Df Spotube[58892:26651] [com.apple.extensionkit:launch] Assertion for extension process 'ExtensionProcess: bundleID: com.apple.WebKit.GPU instance ID: Optional([_EXExtensionInstanceIdentifier: 38DE61B3-E122-4AED-81BC-BA4515CE84B2]) pid: 58972' invalidated
+2026-11-27 22:42:56.397 Df Spotube[58892:266fb] [com.apple.WebKit:ProcessSuspension] 0x11f13c180 - ProcessAssertion() Successfully granted capability
+2026-11-27 22:42:56.397 E  Spotube[58892:26651] [com.apple.WebKit:Process] 0x11f1141e0 - GPUProcessProxy::gpuProcessExited: reason=IdleExit
+2026-11-27 22:42:56.397 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f114270 - [PID=0] ProcessThrottler::didDisconnectFromProcess:
+2026-11-27 22:42:56.397 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f13c600 - ~ProcessAssertion: Releasing process assertion 'GPUProcess NearSuspended Assertion' for process with PID=58972
+2026-11-27 22:42:56.399 Df Spotube[58892:266e4] [com.apple.xpc:connection] [0x100c23d90] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-27 22:42:56.400 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f114270 - [PID=0] ProcessThrottler::invalidateAllActivities: BEGIN (foregroundActivityCount: 0, backgroundActivityCount: 0)
+2026-11-27 22:42:56.400 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f114270 - [PID=0] ProcessThrottler::invalidateAllActivities: END
+2026-11-27 22:42:56.400 Df Spotube[58892:26651] [com.apple.xpc:connection] [0x100c23d90] invalidated after the last release of the connection object
+2026-11-27 22:42:56.400 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x0 - ProcessAssertion: RBS Suspended assertion for process with PID=0 was invalidated
+2026-11-27 22:42:56.408 A  Spotube[58892:266e4] (RunningBoardServices) assertionsDidInvalidate
+2026-11-27 22:42:56.409 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f13c180 - ProcessAssertion: RBS Background assertion for process with PID=58972 was invalidated
+2026-11-27 22:42:56.409 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f13c180 - ProcessAssertion::processAssertionWasInvalidated() PID=58972
+2026-11-27 22:42:56.409 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x600001791e00 - WKProcessAssertionBackgroundTaskManager: endBackgroundTask
+2026-11-27 22:42:56.409 A  Spotube[58892:266fb] (RunningBoardServices) processDidExit
+2026-11-27 22:42:56.409 Df Spotube[58892:266fb] [com.apple.runningboard:process] Firing exit handlers for 58972 with context <RBSProcessExitContext| specific, status:<RBSProcessExitStatus| domain:runningboard(15) code:0>>
+2026-11-27 22:42:56.409 Df Spotube[58892:266fb] [com.apple.runningboard:process] Calling process death completion block for handle [xpcservice<com.apple.WebKit.GPU([app<org.spotube.spotube.Spotube((null))>:58892])>{vt hash: 223737757}[uuid:38DE61B3-E122-4AED-81BC-BA4515CE84B2]{definition:com.apple.WebKit.GPU[extension][client]}:58972]
+2026-11-27 22:42:56.788 E  Spotube[58892:26733] [com.apple.coreaudio:AMCP]          HALC_ProxyIOContext.cpp:1623  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+2026-11-27 22:42:56.821 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:56.821 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:56.821 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:57.342 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:57.343 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:57.343 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:57.887 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:57.887 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:57.888 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:58.436 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:58.436 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:58.437 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:58.807 E  Spotube[58892:26733] [com.apple.coreaudio:AMCP]          HALC_ProxyIOContext.cpp:1623  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+2026-11-27 22:42:58.847 E  Spotube[58892:26733] [com.apple.coreaudio:AMCP]          HALC_ProxyIOContext.cpp:1623  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+2026-11-27 22:42:58.952 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:58.953 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:58.953 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:59.509 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:42:59.509 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:42:59.509 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:42:59.820 E  Spotube[58892:26733] [com.apple.coreaudio:AMCP]          HALC_ProxyIOContext.cpp:1623  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload
+2026-11-27 22:43:00.055 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:00.056 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:00.057 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:00.630 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:00.631 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:00.632 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:01.179 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:01.181 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:01.181 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:01.725 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:01.725 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:01.725 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:02.275 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:02.275 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:02.275 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:02.797 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:02.797 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:02.797 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:03.345 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:03.346 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:03.346 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:03.890 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:03.890 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:03.891 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:04.418 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:04.418 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:04.419 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:04.964 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:04.965 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:04.965 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:05.485 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:05.485 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:05.485 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:06.040 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:06.041 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:06.041 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:06.583 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:06.583 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:06.584 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:07.108 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:07.109 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:07.109 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:07.660 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:07.660 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:07.661 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:08.209 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:08.209 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:08.209 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:08.731 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:08.731 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:08.732 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:09.281 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:09.282 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:09.283 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:09.825 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:09.826 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:09.826 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:10.342 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:10.342 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:10.342 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:10.896 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:10.896 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:10.897 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:11.417 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:11.417 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:11.418 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:11.970 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:11.971 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:11.971 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:12.515 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:12.515 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:12.515 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:13.042 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:13.042 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:13.042 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:13.586 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:13.586 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:13.586 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:14.129 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:14.130 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:14.130 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:14.656 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:14.658 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:14.666 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:15.208 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:15.208 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:15.209 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:15.725 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:15.725 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:15.726 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:15.929 Df Spotube[58892:266fb] [com.apple.CFNetwork:Default] Connection 1: cleaning up
+2026-11-27 22:43:15.930 Df Spotube[58892:266fb] [com.apple.network:connection] [C1 CE619788-84D2-449B-B6F0-41AF26E5780F Hostname#2bb6b43e:443 quic-connection, url: https://api.github.com/repos/team-spotube/spotube/releases, definite, attribution: developer] cancel
+2026-11-27 22:43:15.930 Df Spotube[58892:266fb] [com.apple.network:connection] [C1 CE619788-84D2-449B-B6F0-41AF26E5780F Hostname#2bb6b43e:443 quic-connection, url: https://api.github.com/repos/team-spotube/spotube/releases, definite, attribution: developer] cancelled
+	[C1.1.1.1 166210C0-72C8-4F83-AE5E-380B98D3E37F 192.168.64.15:52443<->IPv4#511fec75:443]
+	Connected Path: satisfied (Path is satisfied), interface: en0
+	Privacy Stance: Not Eligible
+	Duration: 30.367s, DNS @0.027s took 0.002s, TCP @0.030s took 0.078s, TLS 1.3 took 0.175s
+	bytes in/out: 4586/1896, packets in/out: 5/6, rtt: 0.072s, retransmitted bytes: 0, out-of-order bytes: 0
+	ecn packets sent/acked/marked/lost: 6/4/0/0
+2026-11-27 22:43:15.931 Df Spotube[58892:266fb] [com.apple.network:connection] nw_connection_report_state_with_handler_on_nw_queue [C1] reporting state cancelled
+2026-11-27 22:43:15.932 Df Spotube[58892:266fb] [com.apple.CFNetwork:Default] Connection 1: done
+2026-11-27 22:43:16.279 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:16.279 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:16.280 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:16.829 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:16.829 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:16.830 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:17.352 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:17.352 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:17.352 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:17.900 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:17.900 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:17.900 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:18.443 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:18.443 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:18.443 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:18.964 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:18.965 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:18.965 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:19.512 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:19.513 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:19.513 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:20.067 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:20.068 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:20.068 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:20.590 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:20.591 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:20.592 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:21.136 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:21.137 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:21.137 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:21.660 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:21.661 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:21.661 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:22.203 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:22.204 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:22.204 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:22.758 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:22.759 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:22.759 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:22.917 E  Spotube[58892:26651] [com.apple.browserEngineKit:general] Failed to terminate process: Error Domain=com.apple.extensionKit.errorDomain Code=18 "(null)" UserInfo={NSUnderlyingError=0x600000c93b70 {Error Domain=RBSRequestErrorDomain Code=3 "No such process found" UserInfo={NSLocalizedFailureReason=No such process found}}}
+2026-11-27 22:43:22.938 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f13c0c0 - ~ProcessAssertion: Releasing process assertion 'XPCConnectionTerminationWatchdog' for process with PID=58970
+2026-11-27 22:43:23.273 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:23.274 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:23.274 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:23.825 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:23.826 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:23.826 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:24.375 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:24.375 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:24.375 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:24.896 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:24.897 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:24.897 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:25.441 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:25.442 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:25.442 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:25.969 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:25.969 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:25.969 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:26.399 E  Spotube[58892:26651] [com.apple.browserEngineKit:general] Failed to terminate process: Error Domain=com.apple.extensionKit.errorDomain Code=18 "(null)" UserInfo={NSUnderlyingError=0x600000c9d290 {Error Domain=RBSRequestErrorDomain Code=3 "No such process found" UserInfo={NSLocalizedFailureReason=No such process found}}}
+2026-11-27 22:43:26.401 Df Spotube[58892:26651] [com.apple.WebKit:ProcessSuspension] 0x11f13c180 - ~ProcessAssertion: Releasing process assertion 'XPCConnectionTerminationWatchdog' for process with PID=58972
+2026-11-27 22:43:26.514 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:26.515 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:26.515 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:27.062 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:27.062 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:27.062 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:27.587 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:27.587 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:27.587 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:28.142 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:28.143 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:28.143 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:28.694 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:28.694 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:28.695 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:29.238 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:29.238 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:29.238 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:29.752 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:29.752 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:29.753 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:30.306 Df Spotube[58892:266f6] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:30.306 Df Spotube[58892:266f6] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:30.307 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:30.829 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:30.829 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:30.830 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:31.373 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:31.373 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:31.373 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:31.900 Df Spotube[58892:266f2] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:31.901 Df Spotube[58892:266f2] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:31.902 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
+2026-11-27 22:43:32.447 Df Spotube[58892:266fb] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: sending to MediaRemote
+2026-11-27 22:43:32.447 Df Spotube[58892:266fb] [com.apple.amp.mediaremote:NowPlaying] [NowPlayingInfo] Setting identical nowPlayingInfo, skipping update.
+2026-11-27 22:43:32.448 Df Spotube[58892:26651] [com.apple.amp.mediaplayer:RemoteControl] NPIC: setNowPlayingInfo: finished
